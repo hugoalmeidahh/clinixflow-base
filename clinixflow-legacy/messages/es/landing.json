@@ -1,0 +1,142 @@
+{
+  "hero": {
+    "title": {
+      "part1": "Gestión Completa",
+      "part2": "Para su Clínica"
+    },
+    "subtitle": "La plataforma que transforma la gestión de su clínica. Organice citas, pacientes y profesionales de forma",
+    "subtitleHighlight": "simple e intuitiva",
+    "imageAlt": "Panel de programación de citas médicas mostrando calendario y citas",
+    "stats": {
+      "appointments": {
+        "value": "10k+",
+        "label": "Citas programadas"
+      },
+      "professionals": {
+        "value": "500+",
+        "label": "Profesionales activos"
+      },
+      "timeSaved": {
+        "value": "70%",
+        "label": "Ahorro de tiempo"
+      }
+    }
+  },
+  "features": {
+    "title": {
+      "part1": "Características que marcan la",
+      "part2": "diferencia"
+    },
+    "subtitle": "Descubra cómo nuestra plataforma puede transformar la gestión de su clínica médica",
+    "items": {
+      "scheduling": {
+        "title": "Programación Inteligente",
+        "description": "Sistema automatizado que evita conflictos y optimiza su agenda"
+      },
+      "reminders": {
+        "title": "Recordatorios Automáticos",
+        "description": "Reduzca ausencias con notificaciones personalizadas por SMS y correo electrónico",
+        "badge": "próximamente"
+      },
+      "patients": {
+        "title": "Gestión de Pacientes",
+        "description": "Historial completo y expediente digital integrado"
+      },
+      "security": {
+        "title": "Seguridad Total",
+        "description": "Datos protegidos con encriptación de nivel hospitalario"
+      },
+      "interface": {
+        "title": "Interfaz Intuitiva",
+        "description": "Diseño pensado para facilitar la rutina médica diaria"
+      },
+      "support": {
+        "title": "Soporte 24/7",
+        "description": "Equipo especializado siempre listo para ayudar"
+      }
+    }
+  },
+  "benefits": {
+    "title": {
+      "part1": "Transforme su clínica en una",
+      "part2": "máquina eficiente"
+    },
+    "stats": {
+      "schedulingTime": {
+        "value": "80%",
+        "label": "Reducción en tiempo de programación"
+      },
+      "noShows": {
+        "value": "65%",
+        "label": "Menos ausencias a las citas"
+      },
+      "satisfaction": {
+        "value": "90%",
+        "label": "Satisfacción de los pacientes"
+      },
+      "resources": {
+        "value": "50%",
+        "label": "Ahorro en recursos administrativos"
+      }
+    },
+    "cards": {
+      "organized": "Agenda siempre organizada",
+      "satisfied": "Pacientes más satisfechos",
+      "lessWork": "Menos trabajo manual",
+      "moreTime": "Más tiempo para cuidar"
+    }
+  },
+  "testimonials": {
+    "title": {
+      "part1": "Lo que nuestros",
+      "part2": "Profesionales",
+      "part3": "dicen"
+    },
+    "items": {
+      "testimonial1": {
+        "name": "Dr. Carlos Mendes",
+        "specialty": "Terapeuta Integrativo",
+        "text": "ClinixFlow revolucionó mi práctica. Ahora puedo enfocarme 100% en mis pacientes."
+      },
+      "testimonial2": {
+        "name": "Dra. Ana Beatriz",
+        "specialty": "Fisioterapeuta",
+        "text": "Interfaz increíble y soporte excepcional. ¡Lo recomiendo a todos mis colegas!"
+      },
+      "testimonial3": {
+        "name": "Dr. Roberto Silva",
+        "specialty": "Médico General",
+        "text": "Ahorro 3 horas al día en tareas administrativas. ¡Simplemente fantástico!"
+      }
+    }
+  },
+  "contact": {
+    "title": "¿Listo para transformar sus consultas, consultorio o clínica?",
+    "subtitle": "Únase a más de 1,000 profesionales que ya han revolucionado sus citas",
+    "description": "Aclare sus dudas y aproveche los beneficios",
+    "whatsappButton": "Hable conmigo por WhatsApp"
+  },
+  "footer": {
+    "logoAlt": "Logo ClinixFlow",
+    "description": "Revolucionando la gestión médica con tecnología de vanguardia.",
+    "product": {
+      "title": "Producto",
+      "features": "Características",
+      "pricing": "Precios",
+      "security": "Seguridad"
+    },
+    "support": {
+      "title": "Soporte",
+      "helpCenter": "Centro de Ayuda",
+      "privacy": "Política de Privacidad",
+      "terms": "Términos de Uso"
+    },
+    "contact": {
+      "title": "Contacto",
+      "phone": "(12) 98156-5612",
+      "email": "contato@clinixflow.com.br",
+      "location": "São José dos Campos / SP"
+    },
+    "copyright": "ClinixFlow. Todos los derechos reservados."
+  }
+}

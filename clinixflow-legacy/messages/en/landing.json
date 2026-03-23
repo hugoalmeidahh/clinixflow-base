@@ -1,0 +1,142 @@
+{
+  "hero": {
+    "title": {
+      "part1": "Complete Management",
+      "part2": "For Your Clinic"
+    },
+    "subtitle": "The platform that transforms your clinic management. Organize appointments, patients, and professionals in a",
+    "subtitleHighlight": "simple and intuitive way",
+    "imageAlt": "Medical appointment scheduling dashboard showing calendar and appointments",
+    "stats": {
+      "appointments": {
+        "value": "10k+",
+        "label": "Scheduled appointments"
+      },
+      "professionals": {
+        "value": "500+",
+        "label": "Active professionals"
+      },
+      "timeSaved": {
+        "value": "70%",
+        "label": "Time savings"
+      }
+    }
+  },
+  "features": {
+    "title": {
+      "part1": "Features that make the",
+      "part2": "difference"
+    },
+    "subtitle": "Discover how our platform can transform your medical clinic management",
+    "items": {
+      "scheduling": {
+        "title": "Smart Scheduling",
+        "description": "Automated system that prevents conflicts and optimizes your schedule"
+      },
+      "reminders": {
+        "title": "Automatic Reminders",
+        "description": "Reduce no-shows with personalized SMS and email notifications",
+        "badge": "coming soon"
+      },
+      "patients": {
+        "title": "Patient Management",
+        "description": "Complete history and integrated digital records"
+      },
+      "security": {
+        "title": "Total Security",
+        "description": "Data protected with hospital-grade encryption"
+      },
+      "interface": {
+        "title": "Intuitive Interface",
+        "description": "Design created to simplify medical daily routines"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "Specialized team always ready to help"
+      }
+    }
+  },
+  "benefits": {
+    "title": {
+      "part1": "Transform your clinic into an",
+      "part2": "efficient machine"
+    },
+    "stats": {
+      "schedulingTime": {
+        "value": "80%",
+        "label": "Reduction in scheduling time"
+      },
+      "noShows": {
+        "value": "65%",
+        "label": "Fewer missed appointments"
+      },
+      "satisfaction": {
+        "value": "90%",
+        "label": "Patient satisfaction"
+      },
+      "resources": {
+        "value": "50%",
+        "label": "Savings in administrative resources"
+      }
+    },
+    "cards": {
+      "organized": "Always organized schedule",
+      "satisfied": "More satisfied patients",
+      "lessWork": "Less manual work",
+      "moreTime": "More time to care"
+    }
+  },
+  "testimonials": {
+    "title": {
+      "part1": "What our",
+      "part2": "Professionals",
+      "part3": "say"
+    },
+    "items": {
+      "testimonial1": {
+        "name": "Dr. Carlos Mendes",
+        "specialty": "Integrative Therapist",
+        "text": "ClinixFlow revolutionized my practice. Now I can focus 100% on my patients."
+      },
+      "testimonial2": {
+        "name": "Dr. Ana Beatriz",
+        "specialty": "Physical Therapist",
+        "text": "Incredible interface and exceptional support. I recommend it to all my colleagues!"
+      },
+      "testimonial3": {
+        "name": "Dr. Roberto Silva",
+        "specialty": "General Practitioner",
+        "text": "I save 3 hours a day on administrative tasks. Simply fantastic!"
+      }
+    }
+  },
+  "contact": {
+    "title": "Ready to transform your practice, office, or clinic?",
+    "subtitle": "Join over 1,000 professionals who have already revolutionized their appointments",
+    "description": "Clear your doubts and enjoy the benefits",
+    "whatsappButton": "Chat with me on WhatsApp"
+  },
+  "footer": {
+    "logoAlt": "ClinixFlow Logo",
+    "description": "Revolutionizing medical management with cutting-edge technology.",
+    "product": {
+      "title": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "security": "Security"
+    },
+    "support": {
+      "title": "Support",
+      "helpCenter": "Help Center",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Use"
+    },
+    "contact": {
+      "title": "Contact",
+      "phone": "(12) 98156-5612",
+      "email": "contato@clinixflow.com.br",
+      "location": "São José dos Campos / SP"
+    },
+    "copyright": "ClinixFlow. All rights reserved."
+  }
+}

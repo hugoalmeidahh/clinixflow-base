@@ -1,0 +1,16 @@
+{
+  "professional_discharge": "Professional Discharge",
+  "administrative_discharge": "Administrative Discharge",
+  "death": "Death",
+  "clinical_abandonment": "Clinical Abandonment",
+  "insurance_change": "Insurance Change",
+  "city_change": "Changed city",
+  "city_change_desc": "Patient moved to another city or region",
+  "service_dissatisfaction": "Dissatisfied with service",
+  "service_dissatisfaction_desc": "Patient dissatisfied with the service provided",
+  "insurance_not_accepted": "Insurance not accepted",
+  "insurance_not_accepted_desc": "Patient insurance is not accepted by the clinic",
+  "death_desc": "Patient deceased",
+  "other": "Other",
+  "other_desc": "Other reason not listed"
+}

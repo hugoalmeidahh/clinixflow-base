@@ -1,0 +1,8 @@
+{
+  "pending": "Pending",
+  "confirmed": "Confirmed",
+  "completed": "Completed",
+  "cancelled": "Cancelled",
+  "no_show": "No-Show",
+  "rescheduled": "Rescheduled"
+}

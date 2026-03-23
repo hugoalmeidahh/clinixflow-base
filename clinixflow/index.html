@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- TODO: Set the document title to the name of your application -->
+    <title>Clinixflow</title>
+    <meta name="description" content="ClinixFlow é um sistema completo para gestão de clínicas, pacientes, equipe, agendamentos, vacinas, medicina do trabalho, terapias, consultas e relatórios.">
+    <meta name="author" content="Lovable" />
+
+    <!-- TODO: Update og:title to match your application name -->
+    
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/85d80c2e-fdc9-49ba-a850-7b0288bc37b6?Expires=1773343807&amp;GoogleAccessId=go-api-on-aws%40gpt-engineer-390607.iam.gserviceaccount.com&amp;Signature=f4Dc5JFA2KzCRYFvXQ4y6b24MtgZgYRavzwTK9rkzqrP7YrLk8XMR%2BR5buFnveEVzwaVld56LfSAHKrJ3jImzl4KTte9CdeV6Qoaiex8tAy9pbG2a80zka1ncwU2ex%2Fzo%2FHtAzn1Oadhb1o75plN1LkQdQXoDLACq7RwCnalBz3hkd5TfCaCxijyPJC7h1BMm8OAHiiQiahBBCGIX5oAJ1otPNZ17a0UK68rmJh%2BOiDQ3TLt7oD4Q4Tm7hUc7gXSG1eVm053%2FB0Ti6ZIcUJJP%2BbAZ7VvAoDEA1cOEOuPljgzF7QAF9I%2FnMKXpi8Q21dvwF5K0Y4gmLmaO6JcuvlS6w%3D%3D">
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Lovable" />
+    <meta name="twitter:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/85d80c2e-fdc9-49ba-a850-7b0288bc37b6?Expires=1773343807&amp;GoogleAccessId=go-api-on-aws%40gpt-engineer-390607.iam.gserviceaccount.com&amp;Signature=f4Dc5JFA2KzCRYFvXQ4y6b24MtgZgYRavzwTK9rkzqrP7YrLk8XMR%2BR5buFnveEVzwaVld56LfSAHKrJ3jImzl4KTte9CdeV6Qoaiex8tAy9pbG2a80zka1ncwU2ex%2Fzo%2FHtAzn1Oadhb1o75plN1LkQdQXoDLACq7RwCnalBz3hkd5TfCaCxijyPJC7h1BMm8OAHiiQiahBBCGIX5oAJ1otPNZ17a0UK68rmJh%2BOiDQ3TLt7oD4Q4Tm7hUc7gXSG1eVm053%2FB0Ti6ZIcUJJP%2BbAZ7VvAoDEA1cOEOuPljgzF7QAF9I%2FnMKXpi8Q21dvwF5K0Y4gmLmaO6JcuvlS6w%3D%3D">
+    <!-- Pulse Analytics -->
+    <script>
+    (function(){
+      var k="72c1fc8fee2a2b16368263a9c1369f28",ep="https://fqnjdqopjacqzmlapwwk.supabase.co/functions/v1/ingest",q=[];
+      var p=window.pulse={_q:q,_sid:null,_uid:null,
+        _id:function(){var i=localStorage.getItem("_pulse_id");if(!i){i=crypto.randomUUID();localStorage.setItem("_pulse_id",i)}return i},
+        _send:function(d){d.key=k;d.anonymous_id=p._id();d.timestamp=new Date().toISOString();
+          if(p._uid)d.external_user_id=p._uid;
+          try{navigator.sendBeacon?navigator.sendBeacon(ep,JSON.stringify(d)):fetch(ep,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d),keepalive:true})}catch(e){}},
+        // ─── Public API ───
+        track:function(ev,props){p._send({event_name:ev,properties:props||{},page_url:location.href,page_path:location.pathname,referrer:document.referrer})},
+        identify:function(uid,traits){p._uid=uid;localStorage.setItem("_pulse_uid",uid);p._send({type:"identify",user_id:uid,traits:traits||{}})},
+        // ─── Device & context ───
+        _ctx:function(){var s=screen,n=navigator;return{
+          screen_w:s.width,screen_h:s.height,viewport_w:innerWidth,viewport_h:innerHeight,
+          language:n.language,platform:n.platform||n.userAgentData&&n.userAgentData.platform||"",
+          device_type:innerWidth<768?"mobile":innerWidth<1024?"tablet":"desktop",
+          connection:n.connection?n.connection.effectiveType:"unknown"}},
+        // ─── UTM params ───
+        _utm:function(){var u={},s=new URLSearchParams(location.search);
+          ["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(function(k){var v=s.get(k);if(v)u[k]=v});
+          if(Object.keys(u).length)sessionStorage.setItem("_pulse_utm",JSON.stringify(u));
+          else try{u=JSON.parse(sessionStorage.getItem("_pulse_utm")||"{}")}catch(e){}
+          return u},
+        // ─── Auto page view ───
+        _pv:function(){var ctx=p._ctx(),utm=p._utm();
+          p._send({event_name:"page_view",page_url:location.href,page_path:location.pathname,page_title:document.title,referrer:document.referrer,
+            properties:Object.assign({},ctx,utm)})},
+        // ─── SPA navigation ───
+        _spa:function(){var last=location.href;
+          var orig=history.pushState;history.pushState=function(){orig.apply(this,arguments);if(location.href!==last){last=location.href;p._pv()}};
+          var orig2=history.replaceState;history.replaceState=function(){orig2.apply(this,arguments);if(location.href!==last){last=location.href;p._pv()}};
+          window.addEventListener("popstate",function(){if(location.href!==last){last=location.href;p._pv()}})},
+        // ─── Scroll depth ───
+        _scroll:function(){var max=0;var t;
+          window.addEventListener("scroll",function(){var h=document.documentElement,b=document.body;
+            var pct=Math.round((h.scrollTop||b.scrollTop)/((h.scrollHeight||b.scrollHeight)-h.clientHeight)*100);
+            if(pct>max)max=pct;clearTimeout(t);t=setTimeout(function(){},150)},{ passive:true });
+          document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden"&&max>0){p._send({event_name:"scroll_depth",page_url:location.href,page_path:location.pathname,properties:{max_depth:max}})}})},
+        // ─── Time on page ───
+        _time:function(){var start=Date.now();
+          document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden"){var sec=Math.round((Date.now()-start)/1000);
+            if(sec>2)p._send({event_name:"time_on_page",page_url:location.href,page_path:location.pathname,properties:{seconds:sec}})}})},
+        // ─── Outbound link clicks ───
+        _clicks:function(){document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a");
+          if(a&&a.hostname&&a.hostname!==location.hostname){p._send({event_name:"outbound_click",page_url:location.href,page_path:location.pathname,
+            properties:{url:a.href,text:(a.innerText||"").substring(0,100)}})}})},
+        // ─── Web Vitals (lightweight) ───
+        _vitals:function(){if(!PerformanceObserver)return;
+          try{new PerformanceObserver(function(l){l.getEntries().forEach(function(e){p._send({event_name:"web_vital",page_url:location.href,page_path:location.pathname,properties:{metric:"LCP",value:Math.round(e.startTime)}})})}).observe({type:"largest-contentful-paint",buffered:true})}catch(e){}
+          try{new PerformanceObserver(function(l){l.getEntries().forEach(function(e){p._send({event_name:"web_vital",page_url:location.href,page_path:location.pathname,properties:{metric:"FID",value:Math.round(e.processingStart-e.startTime)}})})}).observe({type:"first-input",buffered:true})}catch(e){}
+          try{new PerformanceObserver(function(l){var cls=0;l.getEntries().forEach(function(e){if(!e.hadRecentInput)cls+=e.value});
+            p._send({event_name:"web_vital",page_url:location.href,page_path:location.pathname,properties:{metric:"CLS",value:Math.round(cls*1000)/1000}})}).observe({type:"layout-shift",buffered:true})}catch(e){}}
+      };
+      // Restore identified user
+      var savedUid=localStorage.getItem("_pulse_uid");if(savedUid)p._uid=savedUid;
+      // Boot all auto-tracking
+      p._pv();p._spa();p._scroll();p._time();p._clicks();p._vitals();
+    })();
+    </script>
+    <meta property="og:title" content="Clinixflow">
+  <meta name="twitter:title" content="Clinixflow">
+  <meta property="og:description" content="ClinixFlow é um sistema completo para gestão de clínicas, pacientes, equipe, agendamentos, vacinas, medicina do trabalho, terapias, consultas e relatórios.">
+  <meta name="twitter:description" content="ClinixFlow é um sistema completo para gestão de clínicas, pacientes, equipe, agendamentos, vacinas, medicina do trabalho, terapias, consultas e relatórios.">
+</head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

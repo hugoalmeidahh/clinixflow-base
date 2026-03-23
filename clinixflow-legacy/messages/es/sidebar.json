@@ -1,0 +1,21 @@
+{
+  "dashboard": "Panel de Control",
+  "professionals": "Profesionales",
+  "appointments": "Citas",
+  "patients": "Pacientes",
+  "guides": "Guías",
+  "finance": "Finanzas",
+  "reports": "Informes",
+  "settings": "Configuración",
+  "profile": "Perfil",
+  "inconsistencies": "Inconsistencias",
+  "overduePayments": "Pagos Vencidos",
+  "manageOwners": "Gestionar Propietarios",
+  "manageUsers": "Usuarios",
+  "allAppointments": "Citas",
+  "schedule": "Agenda",
+  "evaluations": "Evaluaciones",
+  "requests": "Solicitudes",
+  "patientReports": "Informes",
+  "signedOutSuccess": "¡Ha cerrado sesión exitosamente!"
+}

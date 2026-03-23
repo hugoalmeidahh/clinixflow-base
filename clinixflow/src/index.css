@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 230 15% 97%;
+    --foreground: 230 25% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 230 25% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 230 25% 10%;
+
+    --primary: 250 70% 56%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 230 30% 94%;
+    --secondary-foreground: 250 70% 40%;
+
+    --muted: 230 15% 95%;
+    --muted-foreground: 230 10% 45%;
+
+    --accent: 195 90% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 230 15% 89%;
+    --input: 230 15% 89%;
+    --ring: 250 70% 56%;
+
+    --radius: 0.625rem;
+
+    /* Status badge colors */
+    --badge-scheduled: 217 91% 60%;
+    --badge-confirmed: 250 70% 56%;
+    --badge-attended: 142 71% 45%;
+    --badge-absent: 0 72% 51%;
+    --badge-justified: 38 92% 50%;
+    --badge-cancelled: 220 9% 46%;
+    --badge-rescheduled: 262 83% 58%;
+
+    /* Brand gradient */
+    --brand-blue: 195 90% 50%;
+    --brand-purple: 250 70% 56%;
+
+    /* Shadows */
+    --shadow-elegant: 0 4px 24px -4px hsl(250 70% 56% / 0.08);
+
+    /* Sidebar */
+    --sidebar-background: 240 20% 10%;
+    --sidebar-foreground: 230 15% 85%;
+    --sidebar-primary: 195 90% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 18% 16%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 240 15% 16%;
+    --sidebar-ring: 250 70% 56%;
+  }
+
+  .dark {
+    --background: 240 20% 6%;
+    --foreground: 230 15% 95%;
+
+    --card: 240 18% 9%;
+    --card-foreground: 230 15% 95%;
+
+    --popover: 240 18% 9%;
+    --popover-foreground: 230 15% 95%;
+
+    --primary: 250 70% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 18% 15%;
+    --secondary-foreground: 230 15% 95%;
+
+    --muted: 240 15% 14%;
+    --muted-foreground: 230 10% 55%;
+
+    --accent: 195 85% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 15% 16%;
+    --input: 240 15% 16%;
+    --ring: 250 70% 60%;
+
+    --sidebar-background: 240 20% 5%;
+    --sidebar-foreground: 230 15% 80%;
+    --sidebar-primary: 195 90% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 18% 10%;
+    --sidebar-accent-foreground: 230 15% 95%;
+    --sidebar-border: 240 15% 12%;
+    --sidebar-ring: 250 70% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'DM Sans', sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .shadow-elegant {
+    box-shadow: var(--shadow-elegant);
+  }
+
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, hsl(var(--brand-blue)), hsl(var(--brand-purple)));
+  }
+
+  .text-brand-gradient {
+    background: linear-gradient(135deg, hsl(var(--brand-blue)), hsl(var(--brand-purple)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}

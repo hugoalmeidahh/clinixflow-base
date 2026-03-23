@@ -1,0 +1,16 @@
+{
+  "professional_discharge": "Alta Profissional",
+  "administrative_discharge": "Alta Administrativa",
+  "death": "Falecimento",
+  "clinical_abandonment": "Abandono Clínico",
+  "insurance_change": "Troca de Convênio",
+  "city_change": "Mudança de cidade",
+  "city_change_desc": "Paciente mudou de cidade ou região",
+  "service_dissatisfaction": "Insatisfação com o atendimento",
+  "service_dissatisfaction_desc": "Paciente insatisfeito com o serviço prestado",
+  "insurance_not_accepted": "Plano de saúde não aceito",
+  "insurance_not_accepted_desc": "Convênio do paciente não é aceito pela clínica",
+  "death_desc": "Paciente faleceu",
+  "other": "Outros",
+  "other_desc": "Outro motivo não listado"
+}

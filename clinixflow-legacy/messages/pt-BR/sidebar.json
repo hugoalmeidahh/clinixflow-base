@@ -1,0 +1,21 @@
+{
+  "dashboard": "Dashboard",
+  "professionals": "Profissionais",
+  "appointments": "Agendamentos",
+  "patients": "Pacientes",
+  "guides": "Guias",
+  "finance": "Financeiro",
+  "reports": "Relatórios",
+  "settings": "Configurações",
+  "profile": "Perfil",
+  "inconsistencies": "Inconsistências",
+  "overduePayments": "Pagamentos Vencidos",
+  "manageOwners": "Gerenciar Owners",
+  "manageUsers": "Usuários",
+  "allAppointments": "Agendamentos",
+  "schedule": "Agenda",
+  "evaluations": "Avaliações",
+  "requests": "Solicitações",
+  "patientReports": "Relatórios",
+  "signedOutSuccess": "Você saiu da sua conta!"
+}

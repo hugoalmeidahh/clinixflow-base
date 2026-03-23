@@ -1,0 +1,21 @@
+{
+  "dashboard": "Dashboard",
+  "professionals": "Professionals",
+  "appointments": "Appointments",
+  "patients": "Patients",
+  "guides": "Guides",
+  "finance": "Finance",
+  "reports": "Reports",
+  "settings": "Settings",
+  "profile": "Profile",
+  "inconsistencies": "Inconsistencies",
+  "overduePayments": "Overdue Payments",
+  "manageOwners": "Manage Owners",
+  "manageUsers": "Users",
+  "allAppointments": "Appointments",
+  "schedule": "Schedule",
+  "evaluations": "Evaluations",
+  "requests": "Requests",
+  "patientReports": "Reports",
+  "signedOutSuccess": "You have been signed out!"
+}

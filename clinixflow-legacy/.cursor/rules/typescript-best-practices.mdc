@@ -1,0 +1,293 @@
+---
+description: Regras de TypeScript e Next.js para evitar erros de build
+globs: 
+  - "**/*.ts"
+  - "**/*.tsx"
+alwaysApply: true
+---
+
+# Regras de TypeScript e Next.js para ClinixFlow
+
+## ⚠️ Por que erros aparecem só no build?
+
+**Live coding (IDE)**: Verifica apenas o arquivo atual, aceita tipos mais flexíveis.
+**Build (\`next build\`)**: Verifica TODO o projeto de forma ESTRITA, incluindo relações entre arquivos.
+
+Incompatibilidades entre arquivos (ex: schema Zod em um arquivo, interface em outro) só são detectadas no build.
+
+**SEMPRE rode \`npm run build\` antes de fazer commit!**
+
+---
+
+## 1. Campos de Session User
+
+O campo \`session.user.role\` pode ser \`undefined\`. SEMPRE verifique antes de usar com \`.includes()\`:
+
+\`\`\`typescript
+// ❌ ERRADO - causa erro de tipo
+if (!allowedRoles.includes(session.user.role)) {
+  redirect("/dashboard");
+}
+
+// ✅ CORRETO - verifica undefined primeiro
+if (!session.user.role || !allowedRoles.includes(session.user.role)) {
+  redirect("/dashboard");
+}
+\`\`\`
+
+## 2. Tipos de Relações com Banco de Dados
+
+Ao definir tipos para dados que vêm do banco de dados com relações (patient, doctor), use campos opcionais pois podem ser \`null\` ou \`undefined\`:
+
+\`\`\`typescript
+// ❌ ERRADO - campos obrigatórios
+type AppointmentWithRelations = {
+  patient: {
+    id: string;
+    name: string;
+    email: string;        // ERRADO
+    phoneNumber: string;  // ERRADO
+    sex: "male" | "female"; // ERRADO
+  } | null;
+  doctor: {
+    id: string;
+    name: string;
+    specialty: string;    // ERRADO
+  } | null;
+};
+
+// ✅ CORRETO - campos opcionais
+type AppointmentWithRelations = {
+  patient: {
+    id: string;
+    name: string;
+    email?: string;
+    phoneNumber?: string;
+    sex?: "male" | "female";
+  } | null;
+  doctor: {
+    id: string;
+    name: string;
+    specialty?: string | null;
+  } | null;
+};
+\`\`\`
+
+## 3. Arrays Readonly (as const)
+
+Ao usar arrays \`as const\`, eles se tornam \`readonly\`. Se precisar retornar como array mutável, use spread:
+
+\`\`\`typescript
+const steps = ["step1", "step2", "step3"] as const;
+type Step = (typeof steps)[number];
+
+// ❌ ERRADO - retorna array readonly
+const getSteps = (): Step[] => {
+  return steps; // Erro: readonly não pode ser atribuído a mutável
+};
+
+// ✅ CORRETO - cria novo array mutável
+const getSteps = (): Step[] => {
+  return [...steps];
+};
+\`\`\`
+
+## 4. Campos de Formulário vs Schema
+
+Ao usar campos em formulários com React Hook Form, verifique se o campo existe no schema Zod:
+
+\`\`\`typescript
+// ❌ ERRADO - campo não existe no schema
+<FormField
+  control={form.control}
+  name="specialty" // Campo obsoleto/não existe
+  render={...}
+/>
+
+// ✅ CORRETO - use campos que existem no schema
+<FormField
+  control={form.control}
+  name="specialties" // Campo correto do schema
+  render={...}
+/>
+\`\`\`
+
+## 5. Tipagem de Arrays com undefined
+
+Ao criar arrays que serão modificados, defina o tipo explicitamente:
+
+\`\`\`typescript
+// ❌ ERRADO - TypeScript infere tipo estreito
+const availability = [
+  { dayOfWeek: 1, startTime: undefined, endTime: undefined },
+];
+// TypeScript infere startTime: undefined (não string | undefined)
+
+// ✅ CORRETO - tipo explícito
+const availability: { 
+  dayOfWeek: number; 
+  startTime: string | undefined; 
+  endTime: string | undefined 
+}[] = [
+  { dayOfWeek: 1, startTime: undefined, endTime: undefined },
+];
+\`\`\`
+
+## 6. Tipos Estendidos do Drizzle
+
+Ao estender tipos do Drizzle (\`\$inferSelect\`), adicione campos que vêm de joins ou que são opcionais:
+
+\`\`\`typescript
+// Tipo base do Drizzle
+type Doctor = typeof doctorsTable.\$inferSelect;
+
+// Estendido com campos adicionais
+type DoctorWithOptionalFields = Doctor & {
+  role?: string | null;           // Vem do user, não do doctor
+  cpf?: string | null;            // Campo legado
+  compensationType?: string | null;
+};
+\`\`\`
+
+## 7. Imports não utilizados
+
+Ao remover código, verifique se os imports ainda são necessários. ESLint irá reclamar de imports não utilizados.
+
+## 8. Variáveis não utilizadas
+
+Use prefixo \`_\` para variáveis que precisam existir mas não serão usadas:
+
+\`\`\`typescript
+// ❌ ERRADO - ESLint reclama
+export function Component({ form }: Props) {
+  // form não é usado
+  return <div>...</div>;
+}
+
+// ✅ CORRETO - prefixo _ indica intenção
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Component(_props: Props) {
+  return <div>...</div>;
+}
+\`\`\`
+
+## 9. Campos Nullable do Banco
+
+Campos do banco de dados que são nullable devem ser tratados:
+
+\`\`\`typescript
+// No schema Drizzle
+specialty: text("specialty"), // Pode ser null
+
+// No código, sempre verificar
+const specialtyLabel = doctor.specialty ?? "Não informado";
+\`\`\`
+
+## 10. Props de Componentes React
+
+Ao passar props para componentes, verifique se o componente aceita essa prop:
+
+\`\`\`typescript
+// ❌ ERRADO - PageContent não aceita className
+<PageContent className="space-y-6">
+  {children}
+</PageContent>
+
+// ✅ CORRETO - verificar se a prop existe no tipo do componente
+// Se não existir, adicionar ao componente ou remover a prop
+\`\`\`
+
+Quando criar componentes reutilizáveis, considere aceitar \`className\` como prop opcional:
+
+\`\`\`typescript
+// ✅ BOA PRÁTICA - componente flexível
+export const PageContent = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return <div className={cn("space-y-6", className)}>{children}</div>;
+};
+\`\`\`
+
+## 11. Zod \`.default()\` vs \`.optional()\` com React Hook Form
+
+**PROBLEMA CRÍTICO**: Quando usamos \`.default()\` no Zod, ele cria tipos diferentes para INPUT e OUTPUT:
+- Input: \`boolean | undefined\`
+- Output: \`boolean\`
+
+React Hook Form usa o tipo de INPUT, causando incompatibilidade.
+
+\`\`\`typescript
+// ❌ ERRADO - causa erro no build
+const formSchema = z.object({
+  createAccount: z.boolean().default(false),
+  showResponsible: z.boolean().default(false),
+});
+// TypeScript vê: createAccount: boolean | undefined (input)
+// Mas esperamos: createAccount: boolean
+
+// ✅ CORRETO - use .optional() e defina defaultValues no useForm
+const formSchema = z.object({
+  createAccount: z.boolean().optional(),
+  showResponsible: z.boolean().optional(),
+});
+
+const form = useForm({
+  resolver: zodResolver(formSchema),
+  defaultValues: {
+    createAccount: false,  // Define o valor padrão aqui
+    showResponsible: false,
+  },
+});
+\`\`\`
+
+## 12. Interfaces de Tabs/Componentes Filhos devem corresponder ao Schema
+
+**PROBLEMA CRÍTICO**: Quando um componente pai tem um schema Zod, os componentes filhos (tabs) devem ter interfaces que CORRESPONDEM EXATAMENTE ao schema.
+
+\`\`\`typescript
+// Schema no componente pai (upsert-patient-form.tsx)
+const formSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email().optional(),  // OPCIONAL
+  phoneNumber: z.string().optional(),     // OPCIONAL
+  cpf: z.string().min(1),                 // OBRIGATÓRIO
+});
+
+// ❌ ERRADO - Interface no componente filho (personal-data-tab.tsx)
+interface PersonalDataTabProps {
+  form: UseFormReturn<{
+    name: string;
+    email: string;      // ERRADO - schema diz optional
+    phoneNumber: string; // ERRADO - schema diz optional
+    cpf: string;
+  }>;
+}
+
+// ✅ CORRETO - Interface corresponde ao schema
+interface PersonalDataTabProps {
+  form: UseFormReturn<{
+    name: string;
+    email?: string;      // Corresponde ao schema
+    phoneNumber?: string; // Corresponde ao schema
+    cpf: string;
+  }>;
+}
+\`\`\`
+
+**REGRA**: Se o campo é \`.optional()\` no schema Zod, deve ser \`campo?: tipo\` na interface.
+
+## 13. Checklist antes de commit
+
+Antes de fazer commit, verifique:
+- [ ] \`npm run build\` passa sem erros
+- [ ] Não há campos de formulário referenciando campos que não existem no schema
+- [ ] Tipos de relações usam campos opcionais onde apropriado
+- [ ] \`session.user.role\` tem verificação de undefined antes de \`.includes()\`
+- [ ] Arrays \`as const\` são convertidos com spread quando retornados como mutáveis
+- [ ] Props passadas para componentes existem nas interfaces dos componentes
+- [ ] Interfaces de tabs/componentes filhos correspondem ao schema Zod do pai
+- [ ] Não usar \`.default()\` no Zod com React Hook Form - usar \`.optional()\` + defaultValues
