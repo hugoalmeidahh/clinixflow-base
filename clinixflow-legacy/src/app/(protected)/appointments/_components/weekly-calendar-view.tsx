@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -195,6 +196,18 @@ const WeeklyCalendarView = ({
   }, [processedAppointments]);
 
 
+  // Calcular o total real de colunas (soma das colunas por dia, conforme médicos com agendamentos)
+  const totalBodyColumns = useMemo(() => {
+    return weekDays.reduce((sum, day) => {
+      const dayKey = new Date(day).setHours(0, 0, 0, 0);
+      const doctorsInDay = doctorsInWeek.filter((doctor) => {
+        const key = `${dayKey}-${doctor.id}`;
+        return appointmentsByDayAndDoctor.has(key);
+      });
+      return sum + Math.max(1, doctorsInDay.length);
+    }, 0);
+  }, [weekDays, doctorsInWeek, appointmentsByDayAndDoctor]);
+
   // Gerar slots de 20 em 20 minutos (08:00, 08:20, 08:40... até 20:40)
   const timeSlots = useMemo(() => {
     const slots = [];
@@ -284,9 +297,9 @@ const WeeklyCalendarView = ({
       {/* Calendário semanal */}
       <div className="bg-card overflow-x-auto rounded-lg border">
         <div
-          className="bg-muted/50 grid border-b"
+          className="bg-muted/50 grid min-w-full border-b"
           style={{
-            gridTemplateColumns: `80px repeat(${weekDays.length * Math.max(1, doctorsInWeek.length)}, minmax(120px, 1fr))`,
+            gridTemplateColumns: `80px repeat(${totalBodyColumns}, minmax(120px, 1fr))`,
           }}
         >
           {/* Cabeçalho vazio para alinhar com as horas */}
@@ -355,9 +368,9 @@ const WeeklyCalendarView = ({
 
         {/* Linhas de tempo */}
         <div
-          className="grid"
+          className="grid min-w-full"
           style={{
-            gridTemplateColumns: `80px repeat(${weekDays.length * Math.max(1, doctorsInWeek.length)}, minmax(120px, 1fr))`,
+            gridTemplateColumns: `80px repeat(${totalBodyColumns}, minmax(120px, 1fr))`,
           }}
         >
           {/* Coluna de horas */}
