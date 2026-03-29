@@ -63,20 +63,18 @@ export const getAvailableTimes = actionClient
       dayAvailability.startTime &&
       dayAvailability.endTime
     ) {
-      // Usar nova estrutura de disponibilidade
+      // Converter horários UTC do banco para BRT antes de montar a janela
       const startTimeLocal = utcTimeToLocal(dayAvailability.startTime);
       const endTimeLocal = utcTimeToLocal(dayAvailability.endTime);
-      const [startHour, startMinute] = startTimeLocal.split(":").map(Number);
-      const [endHour, endMinute] = endTimeLocal.split(":").map(Number);
 
-      doctorAvailableFrom = dayjs(parsedInput.date)
-        .set("hour", startHour)
-        .set("minute", startMinute)
-        .set("second", 0);
-      doctorAvailableTo = dayjs(parsedInput.date)
-        .set("hour", endHour)
-        .set("minute", endMinute)
-        .set("second", 0);
+      doctorAvailableFrom = dayjs.tz(
+        `${parsedInput.date} ${startTimeLocal}`,
+        "America/Sao_Paulo",
+      );
+      doctorAvailableTo = dayjs.tz(
+        `${parsedInput.date} ${endTimeLocal}`,
+        "America/Sao_Paulo",
+      );
     } else if (
       doctor.availableFromWeekDay &&
       doctor.availableToWeekDay &&
@@ -92,20 +90,18 @@ export const getAvailableTimes = actionClient
         return [];
       }
 
-      // Usar horários antigos como fallback
+      // Campos legados — converter UTC para BRT
       const startTimeLocal = utcTimeToLocal(doctor.availableFromTime);
       const endTimeLocal = utcTimeToLocal(doctor.availableToTime);
-      const [startHour, startMinute] = startTimeLocal.split(":").map(Number);
-      const [endHour, endMinute] = endTimeLocal.split(":").map(Number);
 
-      doctorAvailableFrom = dayjs(parsedInput.date)
-        .set("hour", startHour)
-        .set("minute", startMinute)
-        .set("second", 0);
-      doctorAvailableTo = dayjs(parsedInput.date)
-        .set("hour", endHour)
-        .set("minute", endMinute)
-        .set("second", 0);
+      doctorAvailableFrom = dayjs.tz(
+        `${parsedInput.date} ${startTimeLocal}`,
+        "America/Sao_Paulo",
+      );
+      doctorAvailableTo = dayjs.tz(
+        `${parsedInput.date} ${endTimeLocal}`,
+        "America/Sao_Paulo",
+      );
     } else {
       // Sem disponibilidade configurada
       return [];

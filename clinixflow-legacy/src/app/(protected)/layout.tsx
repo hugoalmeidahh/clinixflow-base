@@ -11,6 +11,7 @@ import { ClinicSelector } from "@/components/clinic-selector";
 import { ModeToggle } from "@/components/mode-toggle";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
+import { LanguageSync } from "@/src/components/language-sync";
 import { LanguageSwitcher } from "@/src/components/language-switcher";
 import { requiresPlan } from "@/src/lib/permissions";
 
@@ -70,6 +71,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   return (
     <SidebarProvider>
+      <LanguageSync preferredLanguage={session.user.preferredLanguage ?? null} />
       <LoadingOverlayWrapper />
       {/* Desktop sidebar - hidden on mobile */}
       <div className="hidden md:block">

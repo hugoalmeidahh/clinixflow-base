@@ -2,6 +2,15 @@
   "professional_discharge": "Alta Profesional",
   "administrative_discharge": "Alta Administrativa",
   "death": "Fallecimiento",
+  "death_desc": "El paciente falleció",
   "clinical_abandonment": "Abandono Clínico",
-  "insurance_change": "Cambio de Seguro"
+  "insurance_change": "Cambio de Seguro",
+  "city_change": "Cambio de ciudad",
+  "city_change_desc": "El paciente se mudó de ciudad o región",
+  "service_dissatisfaction": "Insatisfacción con el servicio",
+  "service_dissatisfaction_desc": "Paciente insatisfecho con el servicio prestado",
+  "insurance_not_accepted": "Plan de salud no aceptado",
+  "insurance_not_accepted_desc": "El seguro del paciente no es aceptado por la clínica",
+  "other": "Otros",
+  "other_desc": "Otro motivo no listado"
 }

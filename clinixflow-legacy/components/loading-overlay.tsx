@@ -91,8 +91,19 @@ export function LoadingOverlay() {
       }
       const requestId = Date.now() + Math.random();
 
-      // Ignorar requisições de filtros/pesquisas (não mostrar overlay para essas)
+      // Detectar método da requisição
+      const method =
+        (args[1] as RequestInit | undefined)?.method?.toUpperCase() ?? "GET";
+
+      // Ignorar:
+      // - POST/PUT/PATCH/DELETE: server actions e mutações (têm loading state próprio)
+      // - /api/: rotas de API internas (polling, etc.)
+      // - Padrões de RSC/Next.js: _next, _rsc (refreshes internos do router)
+      // - Requisições de busca/filtro específicas
       const isFilterRequest =
+        method !== "GET" ||
+        url.includes("/_next/") ||
+        url.includes("_rsc=") ||
         url.includes("/api/") ||
         url.includes("available-times") ||
         url.includes("patient-records") ||

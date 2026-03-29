@@ -501,16 +501,7 @@ const AddAppointmentForm = ({
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) => {
-                          // Permitir o dia atual e futuros
-                          const today = new Date();
-                          today.setHours(0, 0, 0, 0);
-                          const selectedDate = new Date(date);
-                          selectedDate.setHours(0, 0, 0, 0);
-                          // Desabilitar apenas datas passadas (antes de hoje)
-                          // A validação de disponibilidade será feita ao buscar horários
-                          return selectedDate < today;
-                        }}
+                        disabled={() => false}
                         initialFocus
                       />
                     </PopoverContent>
@@ -751,22 +742,14 @@ const AddAppointmentForm = ({
                             selected={field.value}
                             onSelect={field.onChange}
                             disabled={(date) => {
-                              const today = new Date();
-                              today.setHours(0, 0, 0, 0);
-                              const dateToCheck = new Date(date);
-                              dateToCheck.setHours(0, 0, 0, 0);
-                              // Desabilitar datas passadas ou antes da data inicial do agendamento
                               if (selectedDate) {
-                                const appointmentStartDate = new Date(
-                                  selectedDate,
-                                );
+                                const appointmentStartDate = new Date(selectedDate);
                                 appointmentStartDate.setHours(0, 0, 0, 0);
-                                return (
-                                  dateToCheck < today ||
-                                  dateToCheck < appointmentStartDate
-                                );
+                                const dateToCheck = new Date(date);
+                                dateToCheck.setHours(0, 0, 0, 0);
+                                return dateToCheck < appointmentStartDate;
                               }
-                              return dateToCheck < today;
+                              return false;
                             }}
                             initialFocus
                           />

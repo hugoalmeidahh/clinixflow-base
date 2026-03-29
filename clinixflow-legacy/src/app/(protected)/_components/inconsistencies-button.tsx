@@ -2,7 +2,6 @@
 
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +10,6 @@ import { Button } from "@/components/ui/button";
 export function InconsistenciesButton() {
   const [count, setCount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     async function fetchCount() {
@@ -32,15 +30,12 @@ export function InconsistenciesButton() {
     }
 
     fetchCount();
-    
-    // Atualizar a cada 30 segundos
-    const interval = setInterval(() => {
-      fetchCount();
-      router.refresh();
-    }, 30000);
-    
+
+    // Atualizar a cada 30 segundos (apenas o contador, sem router.refresh)
+    const interval = setInterval(fetchCount, 30000);
+
     return () => clearInterval(interval);
-  }, [router]);
+  }, []);
 
   // Não mostrar se não houver inconsistências ou se estiver carregando
   if (isLoading || count === null || count === 0) {

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useTransition } from "react";
 
+import { updateUserLanguage } from "@/src/actions/update-user-language";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -27,7 +28,8 @@ export function LanguageSwitcher() {
 
   const handleLocaleChange = (newLocale: string) => {
     document.cookie = `locale=${newLocale};path=/;max-age=${60 * 60 * 24 * 365}`;
-    startTransition(() => {
+    startTransition(async () => {
+      await updateUserLanguage(newLocale);
       router.refresh();
     });
   };

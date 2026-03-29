@@ -200,6 +200,7 @@ export const auth = betterAuth({
           trialEndsAt: trialEndsAt?.toISOString() ?? null,
           role: userData?.role,
           subscriptionId: userData?.subscriptionId ?? null,
+          preferredLanguage: userData?.preferredLanguage ?? null,
           // Clínica atualmente ativa (pode vir de query param ou cookie)
           clinic: defaultClinic
             ? {

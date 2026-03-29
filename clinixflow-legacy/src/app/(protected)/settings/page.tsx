@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { headers } from "next/headers";
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 
 import {
@@ -17,11 +18,11 @@ import { requiresPlan } from "@/src/lib/permissions";
 import { InactivationReasonsTab } from "./_components/inactivation-reasons-tab";
 
 export const metadata: Metadata = {
-  title: "Configurações",
-  description: "Gerencie as configurações da sua clínica",
+  title: "Settings",
 };
 
 const SettingsPage = async () => {
+  const t = await getTranslations("settings");
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -60,17 +61,15 @@ const SettingsPage = async () => {
     <PageContainer>
       <PageHeader>
         <PageHeaderContent>
-          <PageTitle>Configurações</PageTitle>
-          <PageDescription>
-            Gerencie as configurações da sua clínica
-          </PageDescription>
+          <PageTitle>{t("title")}</PageTitle>
+          <PageDescription>{t("description")}</PageDescription>
         </PageHeaderContent>
       </PageHeader>
       <PageContent>
         <Tabs defaultValue="inactivation-reasons">
           <TabsList>
             <TabsTrigger value="inactivation-reasons">
-              Motivos de Inativação
+              {t("inactivationReasons")}
             </TabsTrigger>
           </TabsList>
           <TabsContent value="inactivation-reasons">

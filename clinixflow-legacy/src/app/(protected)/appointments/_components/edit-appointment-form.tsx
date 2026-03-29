@@ -396,13 +396,7 @@ const EditAppointmentForm = ({
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) => {
-                          const today = new Date();
-                          today.setHours(0, 0, 0, 0);
-                          const selectedDate = new Date(date);
-                          selectedDate.setHours(0, 0, 0, 0);
-                          return selectedDate < today;
-                        }}
+                        disabled={() => false}
                         initialFocus
                       />
                     </PopoverContent>
