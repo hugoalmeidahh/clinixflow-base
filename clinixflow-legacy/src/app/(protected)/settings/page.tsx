@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { headers } from "next/headers";
-import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import {
   PageContainer,

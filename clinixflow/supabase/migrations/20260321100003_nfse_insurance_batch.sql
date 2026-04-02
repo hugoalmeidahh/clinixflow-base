@@ -39,7 +39,7 @@ alter table public.invoices enable row level security;
 
 create or replace trigger set_invoices_updated_at
   before update on public.invoices
-  for each row execute function public.set_updated_at();
+  for each row execute function public.update_updated_at_column();
 
 create policy "Tenant isolation for invoices"
   on public.invoices
@@ -90,7 +90,7 @@ alter table public.insurance_batches enable row level security;
 
 create or replace trigger set_insurance_batches_updated_at
   before update on public.insurance_batches
-  for each row execute function public.set_updated_at();
+  for each row execute function public.update_updated_at_column();
 
 create policy "Tenant isolation for insurance_batches"
   on public.insurance_batches

@@ -1,21 +1,39 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePortalSettings } from "@/hooks/usePortalSettings";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, Home, Calendar, FileText, PlusCircle } from "lucide-react";
+import { LogOut, Home, Calendar, FileText, PlusCircle, FileCheck, Upload, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { PatientPortalSettings } from "@/types/portalSettings";
 
-const patientNav = [
+interface NavItem {
+  path: string;
+  label: string;
+  icon: React.ElementType;
+  exact?: boolean;
+  settingsKey?: keyof PatientPortalSettings;
+}
+
+const allNav: NavItem[] = [
   { path: "/portal", label: "Início", icon: Home, exact: true },
-  { path: "/portal/appointments", label: "Consultas", icon: Calendar },
+  { path: "/portal/appointments", label: "Consultas", icon: Calendar, settingsKey: "allow_track_appointments" },
   { path: "/portal/documents", label: "Documentos", icon: FileText },
-  { path: "/portal/booking", label: "Solicitar", icon: PlusCircle },
+  { path: "/portal/booking", label: "Solicitar", icon: PlusCircle, settingsKey: "allow_request_booking" },
+  { path: "/portal/certificates", label: "Atestados", icon: FileCheck, settingsKey: "allow_request_certificate" },
+  { path: "/portal/medical-requests", label: "Pedidos", icon: Upload, settingsKey: "allow_upload_medical_request" },
+  { path: "/portal/reports", label: "Relatórios", icon: BarChart3, settingsKey: "allow_view_reports" },
 ];
 
 const PatientLayout = () => {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { settings } = usePortalSettings();
+
+  const filteredNav = allNav.filter((item) =>
+    !item.settingsKey || settings[item.settingsKey]
+  );
 
   const initials = profile?.full_name
     ?.split(" ")
@@ -59,28 +77,28 @@ const PatientLayout = () => {
         <Outlet />
       </main>
 
-      {/* Bottom nav (mobile) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-10 flex border-t border-border bg-card md:hidden">
-        {patientNav.map(({ path, label, icon: Icon, exact }) => (
+      {/* Bottom nav (mobile) — max 5 visible, rest scroll */}
+      <nav className="fixed bottom-0 left-0 right-0 z-10 flex overflow-x-auto border-t border-border bg-card md:hidden">
+        {filteredNav.map(({ path, label, icon: Icon, exact }) => (
           <button
             key={path}
             onClick={() => navigate(path)}
             className={cn(
-              "flex flex-1 flex-col items-center gap-1 py-2 text-xs transition-colors",
+              "flex min-w-[4.5rem] flex-1 flex-col items-center gap-1 py-2 text-xs transition-colors",
               isActive(path, exact)
                 ? "text-primary"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
             <Icon className="h-5 w-5" />
-            <span>{label}</span>
+            <span className="truncate">{label}</span>
           </button>
         ))}
       </nav>
 
-      {/* Desktop side nav (hidden on mobile) */}
+      {/* Desktop side nav */}
       <aside className="fixed left-0 top-14 bottom-0 hidden w-56 flex-col border-r border-border bg-card p-3 md:flex md:top-16">
-        {patientNav.map(({ path, label, icon: Icon, exact }) => (
+        {filteredNav.map(({ path, label, icon: Icon, exact }) => (
           <button
             key={path}
             onClick={() => navigate(path)}

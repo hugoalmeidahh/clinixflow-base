@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { usePatientAppointments, useConfirmAppointment } from "@/hooks/usePatientPortal";
+import { usePortalSettings } from "@/hooks/usePortalSettings";
+import FeatureDisabled from "@/components/portal/FeatureDisabled";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,12 +21,12 @@ const statusLabels: Record<string, { label: string; variant: "default" | "second
   RESCHEDULED: { label: "Reagendada", variant: "secondary" },
 };
 
-const AppointmentCard = ({ appt }: { appt: any }) => {
+const AppointmentCard = ({ appt, allowConfirm }: { appt: any; allowConfirm: boolean }) => {
   const confirm = useConfirmAppointment();
   const now = new Date();
   const apptDate = new Date(appt.scheduled_at);
   const in48h = addHours(now, 48);
-  const canConfirm = appt.status === "SCHEDULED" && isAfter(apptDate, now) && isBefore(apptDate, in48h);
+  const canConfirm = allowConfirm && appt.status === "SCHEDULED" && isAfter(apptDate, now) && isBefore(apptDate, in48h);
 
   const handleConfirm = async () => {
     try {
@@ -87,7 +89,11 @@ const AppointmentCard = ({ appt }: { appt: any }) => {
 };
 
 const PatientPortalAppointments = () => {
+  const { settings, loading: settingsLoading } = usePortalSettings();
   const { data: appointments = [], isLoading } = usePatientAppointments();
+
+  if (settingsLoading) return null;
+  if (!settings.allow_track_appointments) return <FeatureDisabled />;
   const now = new Date();
 
   const upcoming = appointments
@@ -124,7 +130,7 @@ const PatientPortalAppointments = () => {
               </CardContent>
             </Card>
           ) : (
-            upcoming.map((appt) => <AppointmentCard key={appt.id} appt={appt} />)
+            upcoming.map((appt) => <AppointmentCard key={appt.id} appt={appt} allowConfirm={settings.allow_confirm_appointments} />)
           )}
         </TabsContent>
 
@@ -140,7 +146,7 @@ const PatientPortalAppointments = () => {
               </CardContent>
             </Card>
           ) : (
-            past.map((appt) => <AppointmentCard key={appt.id} appt={appt} />)
+            past.map((appt) => <AppointmentCard key={appt.id} appt={appt} allowConfirm={false} />)
           )}
         </TabsContent>
       </Tabs>

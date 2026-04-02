@@ -3,7 +3,6 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import {
-  PageActions,
   PageContainer,
   PageContent,
   PageDescription,
@@ -12,9 +11,8 @@ import {
   PageTitle,
 } from "@/components/ui/page-container";
 import { auth } from "@/lib/auth";
-import { getAllUsers } from "@/src/actions/get-all-users";
 
-import { UsersList } from "./_components/users-list";
+import { UsersWithFilters } from "./_components/users-with-filters";
 
 export const metadata: Metadata = {
   title: "Gerenciar Usuários | Master",
@@ -34,26 +32,18 @@ const MasterUsersPage = async () => {
     redirect("/dashboard");
   }
 
-  const usersResult = await getAllUsers();
-  const users = usersResult?.data || [];
-
   return (
     <PageContainer>
       <PageHeader>
         <PageHeaderContent>
           <PageTitle>Gerenciar Usuários</PageTitle>
           <PageDescription>
-            Visualize todos os usuários e altere senhas quando necessário
+            Selecione o tipo de usuário para listar e gerenciar senhas
           </PageDescription>
         </PageHeaderContent>
-        <PageActions>
-          <div className="text-sm text-muted-foreground">
-            Total: {users.length} usuários
-          </div>
-        </PageActions>
       </PageHeader>
       <PageContent>
-        <UsersList users={users} />
+        <UsersWithFilters />
       </PageContent>
     </PageContainer>
   );

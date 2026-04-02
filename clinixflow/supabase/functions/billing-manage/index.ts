@@ -204,23 +204,26 @@ Deno.serve(async (req) => {
             message: "Plan upgraded immediately",
           });
         } else {
-          // Downgrade: schedule for period end
-          // Store pending plan in subscription metadata
+          // Downgrade: applied immediately (TODO: schedule for period end when cron is available)
           await serviceClient
             .from("subscriptions")
             .update({
-              // We store the pending change — a cron or webhook will apply it at period end
-              // For now, update immediately since we don't have cron yet
               plan_id: planId,
               billing_cycle: newCycle,
               price_centavos: newPrice,
             })
             .eq("id", subscription.id);
 
+          // Update tenant modules to match new (lower) plan
+          await serviceClient
+            .from("tenants")
+            .update({ active_modules: plan.allowed_modules })
+            .eq("id", userRole.tenant_id);
+
           return jsonResponse({
             success: true,
             type: "downgrade",
-            message: "Plan will change at end of current period",
+            message: "Plan downgraded successfully",
           });
         }
       }

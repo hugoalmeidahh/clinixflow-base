@@ -91,6 +91,18 @@ const PatientDetail = () => {
 
   const handleSave = async () => {
     if (!id || !tenantId) return;
+
+    // Validate guardian fields when required (minor or needs_guardian checked)
+    const age = calculateAge(form.date_of_birth || null);
+    const isMinorNow = age !== null && age < 18;
+    const showGuardian = isMinorNow || form.needs_guardian || !!form.guardian_name;
+    if (showGuardian && isMinorNow) {
+      if (!form.guardian_name || !form.guardian_phone || !form.guardian_relationship) {
+        toast.error("Preencha os campos obrigatórios do responsável (nome, telefone e parentesco).");
+        return;
+      }
+    }
+
     setSaving(true);
     const { error } = await supabase.from("patients").update({
       full_name: form.full_name,

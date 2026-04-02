@@ -14,11 +14,12 @@ import StatusBadge from "@/components/StatusBadge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Plus, Trash2, Building2, Users, Puzzle, BookOpen, DoorOpen, Mail, UserPlus, Shield, CalendarOff, CreditCard, Coins } from "lucide-react";
+import { Loader2, Plus, Trash2, Building2, Users, Puzzle, BookOpen, DoorOpen, Mail, UserPlus, Shield, CalendarOff, CreditCard, Coins, Pencil, Globe } from "lucide-react";
 import PermissionsTab from "@/components/settings/PermissionsTab";
 import HolidaysTab from "@/components/settings/HolidaysTab";
 import SubscriptionTab from "@/components/settings/SubscriptionTab";
 import FinancialSettingsTab from "@/components/settings/FinancialSettingsTab";
+import PatientPortalTab from "@/components/settings/PatientPortalTab";
 import { Switch } from "@/components/ui/switch";
 import type { Database, Tables } from "@/integrations/supabase/types";
 
@@ -61,6 +62,18 @@ const Settings = () => {
   const [createUserDialog, setCreateUserDialog] = useState(false);
   const [createUserForm, setCreateUserForm] = useState({ email: "", password: "", fullName: "", role: "RECEPTIONIST" as string });
   const [createUserSaving, setCreateUserSaving] = useState(false);
+
+  // Edit user dialog
+  const [editUserDialog, setEditUserDialog] = useState(false);
+  const [editUserTarget, setEditUserTarget] = useState<{ userId: string; fullName: string; email: string } | null>(null);
+  const [editUserForm, setEditUserForm] = useState({ fullName: "", email: "" });
+  const [editUserSaving, setEditUserSaving] = useState(false);
+
+  // Reset password dialog
+  const [resetPwdDialog, setResetPwdDialog] = useState(false);
+  const [resetPwdTarget, setResetPwdTarget] = useState<{ userId: string; fullName: string } | null>(null);
+  const [resetPwdForm, setResetPwdForm] = useState({ newPassword: "" });
+  const [resetPwdSaving, setResetPwdSaving] = useState(false);
 
   // Modules
   const [activeModules, setActiveModules] = useState<ModuleType[]>(["BASE"]);
@@ -222,6 +235,83 @@ const Settings = () => {
     }
   };
 
+  // Open edit user dialog
+  const openEditUser = (ur: any) => {
+    setEditUserTarget({ userId: ur.user_id, fullName: ur.profile?.full_name || "", email: ur.profile?.email || "" });
+    setEditUserForm({ fullName: ur.profile?.full_name || "", email: ur.profile?.email || "" });
+    setEditUserDialog(true);
+  };
+
+  // Edit user (name + email)
+  const handleEditUser = async () => {
+    if (!editUserTarget) return;
+    setEditUserSaving(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Sessão expirada");
+
+      const res = await supabase.functions.invoke("update-user", {
+        body: {
+          userId: editUserTarget.userId,
+          fullName: editUserForm.fullName !== editUserTarget.fullName ? editUserForm.fullName : undefined,
+          email: editUserForm.email !== editUserTarget.email ? editUserForm.email : undefined,
+        },
+      });
+
+      if (res.error) throw new Error(res.error.message);
+      const result = res.data as any;
+      if (result?.error) throw new Error(result.error);
+
+      toast.success("Usuário atualizado com sucesso!");
+      setEditUserDialog(false);
+      setEditUserTarget(null);
+      await refreshUsers();
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao atualizar usuário");
+    } finally {
+      setEditUserSaving(false);
+    }
+  };
+
+  // Reset user password via Edge Function
+  const openResetPwd = (ur: any) => {
+    setResetPwdTarget({ userId: ur.user_id, fullName: ur.profile?.full_name || "" });
+    setResetPwdForm({ newPassword: "" });
+    setResetPwdDialog(true);
+  };
+
+  const handleResetPassword = async () => {
+    if (!resetPwdTarget || !resetPwdForm.newPassword) return;
+    if (resetPwdForm.newPassword.length < 8) {
+      toast.error("A senha deve ter no mínimo 8 caracteres.");
+      return;
+    }
+    setResetPwdSaving(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Sessão expirada");
+
+      const res = await supabase.functions.invoke("reset-user-password", {
+        body: {
+          userId: resetPwdTarget.userId,
+          newPassword: resetPwdForm.newPassword,
+        },
+      });
+
+      if (res.error) throw new Error(res.error.message);
+      const result = res.data as any;
+      if (result?.error) throw new Error(result.error);
+
+      toast.success("Senha redefinida! O usuário será obrigado a trocá-la no próximo login.");
+      setResetPwdDialog(false);
+      setResetPwdTarget(null);
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao redefinir senha");
+    } finally {
+      setResetPwdSaving(false);
+    }
+  };
+
   // Change user role
   const handleChangeRole = async (userRoleId: string, newRole: string) => {
     const { error } = await supabase.from("user_roles").update({ role: newRole as any }).eq("id", userRoleId);
@@ -263,6 +353,7 @@ const Settings = () => {
           <TabsTrigger value="modules"><Puzzle className="h-4 w-4" /><span className="hidden sm:inline ml-1">Módulos</span></TabsTrigger>
           <TabsTrigger value="subscription"><CreditCard className="h-4 w-4" /><span className="hidden sm:inline ml-1">Assinatura</span></TabsTrigger>
           <TabsTrigger value="financial"><Coins className="h-4 w-4" /><span className="hidden sm:inline ml-1">Financeiro</span></TabsTrigger>
+          <TabsTrigger value="portal"><Globe className="h-4 w-4" /><span className="hidden sm:inline ml-1">Portal</span></TabsTrigger>
         </TabsList>
 
         {/* Clinic Profile */}
@@ -442,7 +533,7 @@ const Settings = () => {
               ) : (
                 <Table>
                   <TableHeader><TableRow>
-                    <TableHead>Nome</TableHead><TableHead>E-mail</TableHead><TableHead>Função</TableHead><TableHead>Status</TableHead>
+                    <TableHead>Nome</TableHead><TableHead>E-mail</TableHead><TableHead>Função</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Ações</TableHead>
                   </TableRow></TableHeader>
                   <TableBody>
                     {userRoles.map(ur => (
@@ -474,6 +565,18 @@ const Settings = () => {
                             <Switch checked={ur.is_active} onCheckedChange={() => handleToggleUserActive(ur.id, ur.is_active)} />
                           )}
                         </TableCell>
+                        <TableCell className="text-right">
+                          {ur.user_id !== user?.id && (
+                            <div className="flex justify-end gap-1">
+                              <Button variant="ghost" size="sm" onClick={() => openEditUser(ur)} title="Editar">
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="sm" onClick={() => openResetPwd(ur)} title="Redefinir senha">
+                                <Mail className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -481,6 +584,77 @@ const Settings = () => {
               )}
             </CardContent>
           </Card>
+
+          {/* Edit User Dialog */}
+          <Dialog open={editUserDialog} onOpenChange={setEditUserDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Editar Usuário</DialogTitle>
+                <DialogDescription>Atualize o nome ou e-mail do usuário.</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Nome completo</Label>
+                  <Input
+                    value={editUserForm.fullName}
+                    onChange={e => setEditUserForm(p => ({ ...p, fullName: e.target.value }))}
+                    placeholder="Nome completo"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>E-mail</Label>
+                  <Input
+                    type="email"
+                    value={editUserForm.email}
+                    onChange={e => setEditUserForm(p => ({ ...p, email: e.target.value }))}
+                    placeholder="email@clinica.com"
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setEditUserDialog(false)}>Cancelar</Button>
+                <Button
+                  onClick={handleEditUser}
+                  disabled={editUserSaving || (!editUserForm.fullName && !editUserForm.email)}
+                >
+                  {editUserSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Salvar
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          {/* Reset Password Dialog */}
+          <Dialog open={resetPwdDialog} onOpenChange={setResetPwdDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Redefinir Senha</DialogTitle>
+                <DialogDescription>
+                  Defina uma nova senha temporária para {resetPwdTarget?.fullName || "o usuário"}. O usuário será obrigado a trocá-la no próximo login.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Nova senha temporária *</Label>
+                  <Input
+                    type="password"
+                    value={resetPwdForm.newPassword}
+                    onChange={e => setResetPwdForm(p => ({ ...p, newPassword: e.target.value }))}
+                    placeholder="Mínimo 8 caracteres"
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setResetPwdDialog(false)}>Cancelar</Button>
+                <Button
+                  onClick={handleResetPassword}
+                  disabled={resetPwdSaving || !resetPwdForm.newPassword || resetPwdForm.newPassword.length < 8}
+                >
+                  {resetPwdSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Redefinir Senha
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         {/* Holidays */}
@@ -530,6 +704,10 @@ const Settings = () => {
         {/* Financial Settings (Plano de Contas + Centros de Custo) */}
         <TabsContent value="financial">
           <FinancialSettingsTab />
+        </TabsContent>
+
+        <TabsContent value="portal">
+          <PatientPortalTab />
         </TabsContent>
       </Tabs>
     </div>

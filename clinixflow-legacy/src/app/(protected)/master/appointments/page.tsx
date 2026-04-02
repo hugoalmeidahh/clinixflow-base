@@ -3,7 +3,6 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import {
-  PageActions,
   PageContainer,
   PageContent,
   PageDescription,
@@ -12,9 +11,9 @@ import {
   PageTitle,
 } from "@/components/ui/page-container";
 import { auth } from "@/lib/auth";
-import { getAllAppointments } from "@/src/actions/get-all-appointments";
+import { getClinicsMaster } from "@/src/actions/get-clinics-master";
 
-import { AllAppointmentsList } from "./_components/all-appointments-list";
+import { AppointmentsWithFilters } from "./_components/appointments-with-filters";
 
 export const metadata: Metadata = {
   title: "Todos os Agendamentos | Master",
@@ -34,8 +33,8 @@ const MasterAppointmentsPage = async () => {
     redirect("/dashboard");
   }
 
-  const appointmentsResult = await getAllAppointments();
-  const appointments = appointmentsResult?.data || [];
+  const clinicsResult = await getClinicsMaster();
+  const clinics = clinicsResult?.data || [];
 
   return (
     <PageContainer>
@@ -43,17 +42,12 @@ const MasterAppointmentsPage = async () => {
         <PageHeaderContent>
           <PageTitle>Todos os Agendamentos</PageTitle>
           <PageDescription>
-            Visualize todos os agendamentos de todas as clínicas do sistema
+            Selecione a clínica e o mês para listar os agendamentos
           </PageDescription>
         </PageHeaderContent>
-        <PageActions>
-          <div className="text-sm text-muted-foreground">
-            Total: {appointments.length} agendamentos
-          </div>
-        </PageActions>
       </PageHeader>
       <PageContent>
-        <AllAppointmentsList appointments={appointments} />
+        <AppointmentsWithFilters clinics={clinics} />
       </PageContent>
     </PageContainer>
   );

@@ -74,7 +74,7 @@ alter table public.appointment_booking_requests enable row level security;
 -- Trigger for updated_at
 create or replace trigger set_booking_requests_updated_at
   before update on public.appointment_booking_requests
-  for each row execute function public.set_updated_at();
+  for each row execute function public.update_updated_at_column();
 
 -- RLS: Tenant staff can view all booking requests
 create policy "Staff can manage booking requests"

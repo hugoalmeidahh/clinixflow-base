@@ -11,8 +11,8 @@ import { ClinicSelector } from "@/components/clinic-selector";
 import { ModeToggle } from "@/components/mode-toggle";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
-import { LanguageSync } from "@/src/components/language-sync";
 import { LanguageSwitcher } from "@/src/components/language-switcher";
+import { LanguageSync } from "@/src/components/language-sync";
 import { requiresPlan } from "@/src/lib/permissions";
 
 import { AppSidebar } from "./_components/app-sidebar";

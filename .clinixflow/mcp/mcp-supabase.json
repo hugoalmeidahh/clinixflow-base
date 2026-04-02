@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "description": "Connect your Claude Code to Supabase using MCP",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--project-ref=wlsumccybmysmlguylnz"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_0a011dd429af022a014bc573c6f355e2fa0913e3"
+      }
+    }
+  }
+}

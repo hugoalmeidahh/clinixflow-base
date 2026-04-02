@@ -63,7 +63,12 @@
     "filterAll": "All",
     "filterActive": "Active",
     "filterSuspended": "Suspended",
-    "filterTrial": "Trial"
+    "filterTrial": "Trial",
+    "tabGeneral": "General",
+    "tabTeam": "Team",
+    "tabPatients": "Patients",
+    "tabAppointments": "Appointments",
+    "tabClinical": "Clinical"
   },
   "plans": {
     "title": "Plans",
@@ -101,6 +106,105 @@
     "creditCard": "Credit Card",
     "manualPayment": "Manual Payment",
     "notes": "Notes"
+  },
+  "tenantSupport": {
+    "team": {
+      "title": "Team",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "status": "Status",
+      "memberSince": "Member since",
+      "active": "Active",
+      "inactive": "Inactive",
+      "noMembers": "No members found",
+      "totalMembers": "{{count}} members",
+      "roles": {
+        "ORG_ADMIN": "Administrator",
+        "MANAGER": "Manager",
+        "HEALTH_PROFESSIONAL": "Health Professional",
+        "RECEPTIONIST": "Receptionist",
+        "FINANCIAL": "Financial",
+        "PATIENT": "Patient"
+      }
+    },
+    "patients": {
+      "title": "Patients",
+      "search": "Search by name, email or CPF...",
+      "recordNumber": "Record #",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "cpf": "CPF",
+      "status": "Status",
+      "createdAt": "Registered",
+      "active": "Active",
+      "inactive": "Inactive",
+      "noPatients": "No patients found",
+      "totalPatients": "{{count}} patients",
+      "previous": "Previous",
+      "next": "Next",
+      "pageInfo": "Page {{page}} of {{total}}"
+    },
+    "appointments": {
+      "title": "Appointments",
+      "code": "Code",
+      "dateTime": "Date/Time",
+      "patient": "Patient",
+      "professional": "Professional",
+      "specialty": "Specialty",
+      "duration": "Duration",
+      "status": "Status",
+      "type": "Type",
+      "fee": "Fee",
+      "month": "Month",
+      "year": "Year",
+      "allStatuses": "All statuses",
+      "noAppointments": "No appointments found",
+      "totalAppointments": "{{count}} appointments",
+      "statuses": {
+        "SCHEDULED": "Scheduled",
+        "CONFIRMED": "Confirmed",
+        "ATTENDED": "Attended",
+        "ABSENCE": "Absence",
+        "JUSTIFIED_ABSENCE": "Justified Absence",
+        "CANCELLED": "Cancelled",
+        "RESCHEDULED": "Rescheduled"
+      },
+      "types": {
+        "IN_PERSON": "In Person",
+        "ONLINE": "Online",
+        "HOME_VISIT": "Home Visit"
+      }
+    },
+    "clinical": {
+      "title": "Clinical Records",
+      "selectPatient": "Select a patient to view clinical history",
+      "searchPatient": "Search patient...",
+      "events": "Clinical Events",
+      "evaluations": "Evaluations",
+      "noEvents": "No clinical events found",
+      "noEvaluations": "No evaluations found",
+      "eventTypes": {
+        "EVALUATION": "Evaluation",
+        "NOTE": "Note",
+        "ATTENDED": "Attendance",
+        "ABSENCE": "Absence",
+        "JUSTIFIED_ABSENCE": "Justified Absence",
+        "DOCUMENT": "Document"
+      },
+      "evaluationType": "Type",
+      "professional": "Professional",
+      "evalStatus": "Status",
+      "notes": "Notes",
+      "finalizedAt": "Finalized at",
+      "date": "Date",
+      "draft": "Draft",
+      "finalized": "Finalized",
+      "locked": "Locked",
+      "immutable": "Immutable"
+    }
   },
   "common": {
     "save": "Save",

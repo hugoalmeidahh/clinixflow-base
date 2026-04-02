@@ -1,68 +1,71 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useAppointments, useAppointmentsRealtime } from "@/hooks/useAppointments";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, ChevronLeft, ChevronRight, List, LayoutGrid, CalendarDays } from "lucide-react";
 import { format, addDays, startOfWeek, endOfWeek, startOfDay, endOfDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { toast } from "@/components/ui/sonner";
 import AppointmentListView from "@/components/appointments/AppointmentListView";
 import AppointmentDailyView from "@/components/appointments/AppointmentDailyView";
 import AppointmentWeeklyView from "@/components/appointments/AppointmentWeeklyView";
 import NewAppointmentDialog, { type AppointmentPrefill } from "@/components/appointments/NewAppointmentDialog";
+import { useQuery } from "@tanstack/react-query";
 
 const Appointments = () => {
   const { tenantId } = useAuth();
-  const [appointments, setAppointments] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<"daily" | "weekly" | "list">("list");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [prefill, setPrefill] = useState<AppointmentPrefill | null>(null);
 
-  const [patients, setPatients] = useState<any[]>([]);
-  const [professionals, setProfessionals] = useState<any[]>([]);
-  const [specialtiesList, setSpecialtiesList] = useState<any[]>([]);
-
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
 
-  const fetchAppointments = useCallback(async () => {
-    if (!tenantId) return;
-    const rangeStart = view === "daily"
+  const dateRange = useMemo(() => ({
+    start: view === "daily"
       ? startOfDay(currentDate).toISOString()
-      : weekStart.toISOString();
-    const rangeEnd = view === "daily"
+      : weekStart.toISOString(),
+    end: view === "daily"
       ? endOfDay(currentDate).toISOString()
-      : weekEnd.toISOString();
+      : weekEnd.toISOString(),
+  }), [view, currentDate, weekStart, weekEnd]);
 
-    const { data } = await supabase
-      .from("appointments")
-      .select("*, patients!inner(full_name, record_number), professionals!inner(full_name), specialties!inner(name)")
-      .eq("tenant_id", tenantId)
-      .gte("scheduled_at", rangeStart)
-      .lte("scheduled_at", rangeEnd)
-      .order("scheduled_at");
+  // Use React Query hook for appointments with realtime
+  const { data: appointments = [], isLoading, error, refetch } = useAppointments(dateRange);
+  useAppointmentsRealtime();
 
-    setAppointments(data || []);
-    setLoading(false);
-  }, [tenantId, currentDate, view]);
+  // Show error toast if fetch fails
+  if (error) {
+    toast.error("Erro ao carregar agendamentos.");
+  }
 
-  const fetchFormData = useCallback(async () => {
-    if (!tenantId) return;
-    const [p, prof, spec] = await Promise.all([
-      supabase.from("patients").select("id, full_name, record_number").eq("tenant_id", tenantId).eq("is_active", true).order("full_name"),
-      supabase.from("professionals").select("id, full_name").eq("tenant_id", tenantId).eq("is_active", true).order("full_name"),
-      supabase.from("specialties").select("id, name, default_duration_min").eq("tenant_id", tenantId).eq("is_active", true).order("name"),
-    ]);
-    setPatients(p.data || []);
-    setProfessionals(prof.data || []);
-    setSpecialtiesList(spec.data || []);
-  }, [tenantId]);
+  // Form data (patients, professionals, specialties) - cached separately
+  const { data: formData } = useQuery({
+    queryKey: ["appointments-form-data", tenantId],
+    queryFn: async () => {
+      if (!tenantId) return { patients: [], professionals: [], specialties: [] };
+      const [p, prof, spec] = await Promise.all([
+        supabase.from("patients").select("id, full_name, record_number").eq("tenant_id", tenantId).eq("is_active", true).order("full_name"),
+        supabase.from("professionals").select("id, full_name").eq("tenant_id", tenantId).eq("is_active", true).order("full_name"),
+        supabase.from("specialties").select("id, name, default_duration_min").eq("tenant_id", tenantId).eq("is_active", true).order("name"),
+      ]);
+      return {
+        patients: p.data || [],
+        professionals: prof.data || [],
+        specialties: spec.data || [],
+      };
+    },
+    enabled: !!tenantId,
+    staleTime: 5 * 60 * 1000, // 5 min - this data changes rarely
+  });
 
-  useEffect(() => { fetchAppointments(); }, [fetchAppointments]);
-  useEffect(() => { fetchFormData(); }, [fetchFormData]);
+  const patients = formData?.patients || [];
+  const professionals = formData?.professionals || [];
+  const specialtiesList = formData?.specialties || [];
 
   const navigateDate = (days: number) => setCurrentDate(d => addDays(d, days));
   const navStep = view === "daily" ? 1 : 7;
@@ -80,6 +83,8 @@ const Appointments = () => {
     setPrefill(null);
     setDialogOpen(true);
   };
+
+  const handleRefresh = useCallback(() => { refetch(); }, [refetch]);
 
   return (
     <div className="space-y-4">
@@ -122,7 +127,7 @@ const Appointments = () => {
       <NewAppointmentDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        onCreated={fetchAppointments}
+        onCreated={handleRefresh}
         patients={patients}
         professionals={professionals}
         specialtiesList={specialtiesList}
@@ -131,7 +136,7 @@ const Appointments = () => {
 
       <Card>
         <CardContent className="p-0">
-          {loading ? (
+          {isLoading ? (
             <div className="p-6 space-y-3">
               {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-12" />)}
             </div>
@@ -140,7 +145,7 @@ const Appointments = () => {
               {view === "list" && (
                 <AppointmentListView
                   appointments={appointments}
-                  onRefresh={fetchAppointments}
+                  onRefresh={handleRefresh}
                   onNewAppointment={handleOpenNewDialog}
                 />
               )}
@@ -149,7 +154,7 @@ const Appointments = () => {
                   appointments={appointments}
                   professionals={professionals}
                   currentDate={currentDate}
-                  onRefresh={fetchAppointments}
+                  onRefresh={handleRefresh}
                   onSlotClick={handleSlotClick}
                 />
               )}
@@ -157,7 +162,7 @@ const Appointments = () => {
                 <AppointmentWeeklyView
                   appointments={appointments}
                   currentDate={currentDate}
-                  onRefresh={fetchAppointments}
+                  onRefresh={handleRefresh}
                   onSlotClick={handleSlotClick}
                 />
               )}

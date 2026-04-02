@@ -20,6 +20,7 @@ import {
   Stethoscope,
   Sun,
   User,
+  UserRound,
   UsersRound,
 } from "lucide-react";
 import Image from "next/image";
@@ -181,6 +182,11 @@ const masterItems: MenuItem[] = [
     titleKey: "allAppointments",
     url: "/master/appointments",
     icon: CalendarDays,
+  },
+  {
+    titleKey: "allPatients",
+    url: "/master/patients",
+    icon: UserRound,
   },
   {
     titleKey: "overduePayments",

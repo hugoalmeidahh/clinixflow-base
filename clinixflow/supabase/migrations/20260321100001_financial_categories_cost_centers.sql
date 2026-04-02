@@ -18,7 +18,7 @@ alter table public.financial_categories enable row level security;
 
 create or replace trigger set_financial_categories_updated_at
   before update on public.financial_categories
-  for each row execute function public.set_updated_at();
+  for each row execute function public.update_updated_at_column();
 
 create policy "Tenant isolation for financial_categories"
   on public.financial_categories
@@ -47,7 +47,7 @@ alter table public.cost_centers enable row level security;
 
 create or replace trigger set_cost_centers_updated_at
   before update on public.cost_centers
-  for each row execute function public.set_updated_at();
+  for each row execute function public.update_updated_at_column();
 
 create policy "Tenant isolation for cost_centers"
   on public.cost_centers

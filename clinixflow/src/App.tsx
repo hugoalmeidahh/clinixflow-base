@@ -37,6 +37,9 @@ import PatientPortalDashboard from "./pages/portal/PatientPortalDashboard";
 import PatientPortalAppointments from "./pages/portal/PatientPortalAppointments";
 import PatientPortalDocuments from "./pages/portal/PatientPortalDocuments";
 import PatientPortalBooking from "./pages/portal/PatientPortalBooking";
+import PatientPortalCertificates from "./pages/portal/PatientPortalCertificates";
+import PatientPortalMedicalRequests from "./pages/portal/PatientPortalMedicalRequests";
+import PatientPortalReports from "./pages/portal/PatientPortalReports";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +69,9 @@ const App = () => (
               <Route path="appointments" element={<PatientPortalAppointments />} />
               <Route path="documents" element={<PatientPortalDocuments />} />
               <Route path="booking" element={<PatientPortalBooking />} />
+              <Route path="certificates" element={<PatientPortalCertificates />} />
+              <Route path="medical-requests" element={<PatientPortalMedicalRequests />} />
+              <Route path="reports" element={<PatientPortalReports />} />
             </Route>
 
             {/* Protected app routes (clinic staff) */}

@@ -124,20 +124,30 @@ const AppointmentActions = ({ appointment, onActionComplete, mode = "menu", chil
           setLoading(false);
           return;
         }
+        const scheduledAt = new Date(`${rescheduleDate}T${rescheduleTime}`).toISOString();
+
+        // Use RPC to validate conflicts and generate code
+        const { error: rpcError } = await supabase.rpc("book_appointment", {
+          p_tenant_id: appointment.tenant_id,
+          p_patient_id: appointment.patient_id,
+          p_professional_id: appointment.professional_id,
+          p_specialty_id: appointment.specialty_id,
+          p_scheduled_at: scheduledAt,
+          p_duration_min: appointment.duration_min,
+          p_notes: `Reagendamento do ${appointment.code}`,
+          p_skip_conflict_check: false,
+          p_recurrence_group_id: null,
+        });
+
+        if (rpcError) {
+          toast.error(rpcError.message || "Conflito de horário detectado.");
+          setLoading(false);
+          return;
+        }
+
         await supabase.from("appointments").update({
           status: "RESCHEDULED",
         }).eq("id", appointment.id);
-        const scheduledAt = new Date(`${rescheduleDate}T${rescheduleTime}`).toISOString();
-        await supabase.from("appointments").insert({
-          tenant_id: appointment.tenant_id,
-          patient_id: appointment.patient_id,
-          professional_id: appointment.professional_id,
-          specialty_id: appointment.specialty_id,
-          scheduled_at: scheduledAt,
-          duration_min: appointment.duration_min,
-          original_appointment_id: appointment.id,
-          code: "",
-        });
         toast.success("Agendamento reagendado!");
       }
 
@@ -148,18 +158,26 @@ const AppointmentActions = ({ appointment, onActionComplete, mode = "menu", chil
           return;
         }
         const scheduledAt = new Date(`${rescheduleDate}T${rescheduleTime}`).toISOString();
-        await supabase.from("appointments").insert({
-          tenant_id: appointment.tenant_id,
-          patient_id: appointment.patient_id,
-          professional_id: appointment.professional_id,
-          specialty_id: appointment.specialty_id,
-          scheduled_at: scheduledAt,
-          duration_min: appointment.duration_min,
-          original_appointment_id: appointment.id,
-          appointment_type: appointment.appointment_type,
-          code: "",
-          notes: `Reposição do agendamento ${appointment.code}`,
+
+        // Use RPC to validate conflicts and generate code
+        const { error: rpcError } = await supabase.rpc("book_appointment", {
+          p_tenant_id: appointment.tenant_id,
+          p_patient_id: appointment.patient_id,
+          p_professional_id: appointment.professional_id,
+          p_specialty_id: appointment.specialty_id,
+          p_scheduled_at: scheduledAt,
+          p_duration_min: appointment.duration_min,
+          p_notes: `Reposição do agendamento ${appointment.code}`,
+          p_skip_conflict_check: false,
+          p_recurrence_group_id: null,
         });
+
+        if (rpcError) {
+          toast.error(rpcError.message || "Conflito de horário detectado.");
+          setLoading(false);
+          return;
+        }
+
         toast.success("Agendamento de reposição criado!");
       }
 

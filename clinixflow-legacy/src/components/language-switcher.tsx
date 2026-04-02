@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useTransition } from "react";
 
-import { updateUserLanguage } from "@/src/actions/update-user-language";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { updateUserLanguage } from "@/src/actions/update-user-language";
 
 const localeOptions = [
   { value: "pt-BR", label: "Português", flag: "🇧🇷" },

@@ -45,8 +45,10 @@ const PAYMENT_METHODS = ["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "
 
 // ── Financial Page ────────────────────────────────────────────────────────────
 
+const ALLOWED_ROLES = ["ORG_ADMIN", "MANAGER", "FINANCIAL", "OWNER"];
+
 const Financial = () => {
-  const { tenantId, user } = useAuth();
+  const { tenantId, user, userRole } = useAuth();
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [kpi, setKpi] = useState({ totalIncome: 0, totalExpense: 0, received: 0, outstanding: 0 });
@@ -230,6 +232,14 @@ const Financial = () => {
     { label: "Recebido", value: formatCurrency(kpi.received), icon: Wallet, color: "text-primary" },
     { label: "A Receber", value: formatCurrency(kpi.outstanding), icon: DollarSign, color: "text-badge-justified" },
   ];
+
+  if (userRole && !ALLOWED_ROLES.includes(userRole.role)) {
+    return (
+      <div className="text-center py-16">
+        <p className="text-muted-foreground">Acesso restrito. Você não tem permissão para acessar o módulo financeiro.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -46,12 +46,20 @@ const PatientInsuranceTab = ({ patient, tenantId }: PatientInsuranceTabProps) =>
 
   const handleSave = async () => {
     setSaving(true);
+    const currentSettings = (patient as any).settings as Record<string, any> | null;
+    const updatedSettings = {
+      ...currentSettings,
+      sus_card_number: form.sus_card_number || null,
+      default_location: form.default_location || null,
+    };
+
     const { error } = await supabase.from("patients").update({
       care_type: form.care_type as any,
       convention_id: form.convention_id && form.convention_id !== "__none__" ? form.convention_id : null,
       insurance_card_number: form.insurance_card_number || null,
       insurance_card_expiry: form.insurance_card_expiry || null,
-    }).eq("id", patient.id).eq("tenant_id", tenantId);
+      settings: updatedSettings,
+    } as any).eq("id", patient.id).eq("tenant_id", tenantId);
 
     if (error) toast.error(error.message);
     else {

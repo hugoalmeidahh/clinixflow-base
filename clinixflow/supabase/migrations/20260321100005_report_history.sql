@@ -1,6 +1,6 @@
 -- ── Report History (REL-006) ──────────────────────────────────────────────
 
-CREATE TABLE report_history (
+CREATE TABLE IF NOT EXISTS report_history (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
   user_id UUID REFERENCES auth.users(id),
@@ -17,4 +17,4 @@ ALTER TABLE report_history ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "tenant_report_history" ON report_history
   FOR ALL USING (tenant_id = get_user_tenant_id(auth.uid()));
 
-CREATE INDEX idx_report_history_tenant ON report_history(tenant_id, user_id, generated_at DESC);
+CREATE INDEX IF NOT EXISTS idx_report_history_tenant ON report_history(tenant_id, user_id, generated_at DESC);

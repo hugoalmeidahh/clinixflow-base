@@ -42,6 +42,18 @@ Deno.serve(async (req) => {
       throw new Error("Missing required fields: email, password, fullName, role");
     }
 
+    // Check if email already exists
+    const { data: existingProfile } = await adminClient
+      .from("profiles")
+      .select("user_id")
+      .eq("email", email)
+      .limit(1)
+      .maybeSingle();
+
+    if (existingProfile) {
+      throw new Error("Já existe um usuário com este e-mail.");
+    }
+
     // Create the user
     const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
       email,

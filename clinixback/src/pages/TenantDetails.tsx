@@ -4,7 +4,12 @@ import { useTenantDetails, useTenantAction } from "@/hooks/useTenants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TenantStatusBadge } from "@/components/tenants/TenantStatusBadge";
+import { TenantTeamTab } from "@/components/tenants/TenantTeamTab";
+import { TenantPatientsTab } from "@/components/tenants/TenantPatientsTab";
+import { TenantAppointmentsTab } from "@/components/tenants/TenantAppointmentsTab";
+import { TenantClinicalTab } from "@/components/tenants/TenantClinicalTab";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Users, UserCheck, Calendar, Pause, Play } from "lucide-react";
 import { toast } from "sonner";
@@ -85,110 +90,138 @@ export default function TenantDetails() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {/* General Info */}
-        <Card className="shadow-elegant">
-          <CardHeader>
-            <CardTitle className="font-heading text-lg">
-              {t("tenants.generalInfo")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <Row label={t("tenants.cnpj")} value={tenant.cnpj || "-"} />
-            <Row label={t("auth.email")} value={tenant.email || "-"} />
-            <Row label={t("tenants.phone")} value={tenant.phone || "-"} />
-            <Row
-              label={t("tenants.createdAt")}
-              value={new Date(tenant.created_at).toLocaleDateString()}
-            />
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="general" className="w-full">
+        <TabsList className="w-full justify-start overflow-x-auto">
+          <TabsTrigger value="general">{t("tenants.tabGeneral")}</TabsTrigger>
+          <TabsTrigger value="team">{t("tenants.tabTeam")}</TabsTrigger>
+          <TabsTrigger value="patients">{t("tenants.tabPatients")}</TabsTrigger>
+          <TabsTrigger value="appointments">{t("tenants.tabAppointments")}</TabsTrigger>
+          <TabsTrigger value="clinical">{t("tenants.tabClinical")}</TabsTrigger>
+        </TabsList>
 
-        {/* Subscription */}
-        <Card className="shadow-elegant">
-          <CardHeader>
-            <CardTitle className="font-heading text-lg">
-              {t("tenants.subscription")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <Row
-              label={t("tenants.plan")}
-              value={
-                tenant.plans
-                  ? `${tenant.plans.name} (${tenant.plans.tier})`
-                  : "-"
-              }
-            />
-            {tenant.plans && (
-              <Row
-                label={t("plans.priceMonthly")}
-                value={new Intl.NumberFormat("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                }).format((tenant.plans.price_monthly || 0) / 100)}
-              />
-            )}
-            <Row
-              label={t("tenants.expiresAt")}
-              value={
-                tenant.subscription_ends_at
-                  ? new Date(tenant.subscription_ends_at).toLocaleDateString()
-                  : "-"
-              }
-            />
-          </CardContent>
-        </Card>
+        <TabsContent value="general">
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* General Info */}
+            <Card className="shadow-elegant">
+              <CardHeader>
+                <CardTitle className="font-heading text-lg">
+                  {t("tenants.generalInfo")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <Row label={t("tenants.cnpj")} value={tenant.cnpj || "-"} />
+                <Row label={t("auth.email")} value={tenant.email || "-"} />
+                <Row label={t("tenants.phone")} value={tenant.phone || "-"} />
+                <Row
+                  label={t("tenants.createdAt")}
+                  value={new Date(tenant.created_at).toLocaleDateString()}
+                />
+              </CardContent>
+            </Card>
 
-        {/* Active Modules */}
-        <Card className="shadow-elegant">
-          <CardHeader>
-            <CardTitle className="font-heading text-lg">
-              {t("tenants.modules")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {(tenant.active_modules || []).map((mod) => (
-                <Badge key={mod} variant="secondary">
-                  {mod}
-                </Badge>
-              ))}
-              {(!tenant.active_modules || tenant.active_modules.length === 0) && (
-                <p className="text-muted-foreground text-sm">{t("common.noData")}</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+            {/* Subscription */}
+            <Card className="shadow-elegant">
+              <CardHeader>
+                <CardTitle className="font-heading text-lg">
+                  {t("tenants.subscription")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <Row
+                  label={t("tenants.plan")}
+                  value={
+                    tenant.plans
+                      ? `${tenant.plans.name} (${tenant.plans.tier})`
+                      : "-"
+                  }
+                />
+                {tenant.plans && (
+                  <Row
+                    label={t("plans.priceMonthly")}
+                    value={new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format((tenant.plans.price_monthly || 0) / 100)}
+                  />
+                )}
+                <Row
+                  label={t("tenants.expiresAt")}
+                  value={
+                    tenant.subscription_ends_at
+                      ? new Date(tenant.subscription_ends_at).toLocaleDateString()
+                      : "-"
+                  }
+                />
+              </CardContent>
+            </Card>
 
-        {/* Stats */}
-        <Card className="shadow-elegant">
-          <CardHeader>
-            <CardTitle className="font-heading text-lg">
-              {t("tenants.stats")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 gap-4">
-              <StatItem
-                icon={Users}
-                label={t("tenants.users")}
-                value={stats.users}
-              />
-              <StatItem
-                icon={UserCheck}
-                label={t("tenants.patients")}
-                value={stats.patients}
-              />
-              <StatItem
-                icon={Calendar}
-                label={t("tenants.appointments")}
-                value={stats.appointments}
-              />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            {/* Active Modules */}
+            <Card className="shadow-elegant">
+              <CardHeader>
+                <CardTitle className="font-heading text-lg">
+                  {t("tenants.modules")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {(tenant.active_modules || []).map((mod) => (
+                    <Badge key={mod} variant="secondary">
+                      {mod}
+                    </Badge>
+                  ))}
+                  {(!tenant.active_modules || tenant.active_modules.length === 0) && (
+                    <p className="text-muted-foreground text-sm">{t("common.noData")}</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Stats */}
+            <Card className="shadow-elegant">
+              <CardHeader>
+                <CardTitle className="font-heading text-lg">
+                  {t("tenants.stats")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-3 gap-4">
+                  <StatItem
+                    icon={Users}
+                    label={t("tenants.users")}
+                    value={stats.users}
+                  />
+                  <StatItem
+                    icon={UserCheck}
+                    label={t("tenants.patients")}
+                    value={stats.patients}
+                  />
+                  <StatItem
+                    icon={Calendar}
+                    label={t("tenants.appointments")}
+                    value={stats.appointments}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="team">
+          <TenantTeamTab tenantId={id!} />
+        </TabsContent>
+
+        <TabsContent value="patients">
+          <TenantPatientsTab tenantId={id!} />
+        </TabsContent>
+
+        <TabsContent value="appointments">
+          <TenantAppointmentsTab tenantId={id!} />
+        </TabsContent>
+
+        <TabsContent value="clinical">
+          <TenantClinicalTab tenantId={id!} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

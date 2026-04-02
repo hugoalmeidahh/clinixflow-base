@@ -1,6 +1,6 @@
 -- ── Assessment Templates (Instrument Builder) ─────────────────────────────
 
-CREATE TABLE assessment_templates (
+CREATE TABLE IF NOT EXISTS assessment_templates (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE assessment_templates (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE assessment_sections (
+CREATE TABLE IF NOT EXISTS assessment_sections (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   template_id UUID NOT NULL REFERENCES assessment_templates(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE assessment_sections (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE assessment_questions (
+CREATE TABLE IF NOT EXISTS assessment_questions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   section_id UUID NOT NULL REFERENCES assessment_sections(id) ON DELETE CASCADE,
   text TEXT NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE assessment_questions (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE assessment_options (
+CREATE TABLE IF NOT EXISTS assessment_options (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   question_id UUID NOT NULL REFERENCES assessment_questions(id) ON DELETE CASCADE,
   label TEXT NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE assessment_options (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE assessment_score_ranges (
+CREATE TABLE IF NOT EXISTS assessment_score_ranges (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   template_id UUID NOT NULL REFERENCES assessment_templates(id) ON DELETE CASCADE,
   section_id UUID REFERENCES assessment_sections(id) ON DELETE CASCADE, -- NULL = global
@@ -55,7 +55,7 @@ CREATE TABLE assessment_score_ranges (
 );
 
 -- N:N specialty access control (AVA-006)
-CREATE TABLE assessment_template_specialties (
+CREATE TABLE IF NOT EXISTS assessment_template_specialties (
   template_id UUID NOT NULL REFERENCES assessment_templates(id) ON DELETE CASCADE,
   specialty_id UUID NOT NULL REFERENCES specialties(id) ON DELETE CASCADE,
   PRIMARY KEY (template_id, specialty_id)
@@ -63,7 +63,7 @@ CREATE TABLE assessment_template_specialties (
 
 -- ── Assessment Sessions (AVA-002) ──────────────────────────────────────────
 
-CREATE TABLE assessments (
+CREATE TABLE IF NOT EXISTS assessments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
   patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
@@ -80,7 +80,7 @@ CREATE TABLE assessments (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE assessment_answers (
+CREATE TABLE IF NOT EXISTS assessment_answers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   assessment_id UUID NOT NULL REFERENCES assessments(id) ON DELETE CASCADE,
   question_id UUID NOT NULL REFERENCES assessment_questions(id),
@@ -92,7 +92,7 @@ CREATE TABLE assessment_answers (
   UNIQUE (assessment_id, question_id)
 );
 
-CREATE TABLE assessment_results (
+CREATE TABLE IF NOT EXISTS assessment_results (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   assessment_id UUID NOT NULL REFERENCES assessments(id) ON DELETE CASCADE,
   section_id UUID REFERENCES assessment_sections(id), -- NULL = global
@@ -105,7 +105,7 @@ CREATE TABLE assessment_results (
 
 -- ── Assessment Feedback (AVA-007) ──────────────────────────────────────────
 
-CREATE TABLE assessment_feedback (
+CREATE TABLE IF NOT EXISTS assessment_feedback (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   assessment_id UUID NOT NULL REFERENCES assessments(id) ON DELETE CASCADE,
   sent_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -164,10 +164,10 @@ CREATE POLICY "tenant_assessment_feedback" ON assessment_feedback
 
 -- ── Indexes ───────────────────────────────────────────────────────────────
 
-CREATE INDEX idx_assessment_templates_tenant ON assessment_templates(tenant_id);
-CREATE INDEX idx_assessment_sections_template ON assessment_sections(template_id, order_index);
-CREATE INDEX idx_assessment_questions_section ON assessment_questions(section_id, order_index);
-CREATE INDEX idx_assessment_options_question ON assessment_options(question_id, order_index);
-CREATE INDEX idx_assessments_tenant ON assessments(tenant_id, patient_id);
-CREATE INDEX idx_assessment_answers_session ON assessment_answers(assessment_id, question_id);
-CREATE INDEX idx_assessment_results_session ON assessment_results(assessment_id);
+CREATE INDEX IF NOT EXISTS idx_assessment_templates_tenant ON assessment_templates(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_assessment_sections_template ON assessment_sections(template_id, order_index);
+CREATE INDEX IF NOT EXISTS idx_assessment_questions_section ON assessment_questions(section_id, order_index);
+CREATE INDEX IF NOT EXISTS idx_assessment_options_question ON assessment_options(question_id, order_index);
+CREATE INDEX IF NOT EXISTS idx_assessments_tenant ON assessments(tenant_id, patient_id);
+CREATE INDEX IF NOT EXISTS idx_assessment_answers_session ON assessment_answers(assessment_id, question_id);
+CREATE INDEX IF NOT EXISTS idx_assessment_results_session ON assessment_results(assessment_id);

@@ -63,7 +63,12 @@
     "filterAll": "Todos",
     "filterActive": "Ativos",
     "filterSuspended": "Suspensos",
-    "filterTrial": "Trial"
+    "filterTrial": "Trial",
+    "tabGeneral": "Geral",
+    "tabTeam": "Equipe",
+    "tabPatients": "Pacientes",
+    "tabAppointments": "Agendamentos",
+    "tabClinical": "Clinico"
   },
   "plans": {
     "title": "Planos",
@@ -101,6 +106,105 @@
     "creditCard": "Cartao de Credito",
     "manualPayment": "Pagamento Manual",
     "notes": "Observacoes"
+  },
+  "tenantSupport": {
+    "team": {
+      "title": "Equipe",
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "role": "Cargo",
+      "status": "Status",
+      "memberSince": "Membro desde",
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "noMembers": "Nenhum membro encontrado",
+      "totalMembers": "{{count}} membros",
+      "roles": {
+        "ORG_ADMIN": "Administrador",
+        "MANAGER": "Gestor",
+        "HEALTH_PROFESSIONAL": "Profissional de Saude",
+        "RECEPTIONIST": "Recepcionista",
+        "FINANCIAL": "Financeiro",
+        "PATIENT": "Paciente"
+      }
+    },
+    "patients": {
+      "title": "Pacientes",
+      "search": "Buscar por nome, e-mail ou CPF...",
+      "recordNumber": "Prontuario",
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "cpf": "CPF",
+      "status": "Status",
+      "createdAt": "Cadastro",
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "noPatients": "Nenhum paciente encontrado",
+      "totalPatients": "{{count}} pacientes",
+      "previous": "Anterior",
+      "next": "Proximo",
+      "pageInfo": "Pagina {{page}} de {{total}}"
+    },
+    "appointments": {
+      "title": "Agendamentos",
+      "code": "Codigo",
+      "dateTime": "Data/Hora",
+      "patient": "Paciente",
+      "professional": "Profissional",
+      "specialty": "Especialidade",
+      "duration": "Duracao",
+      "status": "Status",
+      "type": "Tipo",
+      "fee": "Valor",
+      "month": "Mes",
+      "year": "Ano",
+      "allStatuses": "Todos os status",
+      "noAppointments": "Nenhum agendamento encontrado",
+      "totalAppointments": "{{count}} agendamentos",
+      "statuses": {
+        "SCHEDULED": "Agendado",
+        "CONFIRMED": "Confirmado",
+        "ATTENDED": "Atendido",
+        "ABSENCE": "Falta",
+        "JUSTIFIED_ABSENCE": "Falta Justificada",
+        "CANCELLED": "Cancelado",
+        "RESCHEDULED": "Reagendado"
+      },
+      "types": {
+        "IN_PERSON": "Presencial",
+        "ONLINE": "Online",
+        "HOME_VISIT": "Domiciliar"
+      }
+    },
+    "clinical": {
+      "title": "Prontuario Clinico",
+      "selectPatient": "Selecione um paciente para ver o historico clinico",
+      "searchPatient": "Buscar paciente...",
+      "events": "Eventos Clinicos",
+      "evaluations": "Avaliacoes",
+      "noEvents": "Nenhum evento clinico encontrado",
+      "noEvaluations": "Nenhuma avaliacao encontrada",
+      "eventTypes": {
+        "EVALUATION": "Avaliacao",
+        "NOTE": "Nota",
+        "ATTENDED": "Atendimento",
+        "ABSENCE": "Falta",
+        "JUSTIFIED_ABSENCE": "Falta Justificada",
+        "DOCUMENT": "Documento"
+      },
+      "evaluationType": "Tipo",
+      "professional": "Profissional",
+      "evalStatus": "Status",
+      "notes": "Notas",
+      "finalizedAt": "Finalizado em",
+      "date": "Data",
+      "draft": "Rascunho",
+      "finalized": "Finalizado",
+      "locked": "Bloqueado",
+      "immutable": "Imutavel"
+    }
   },
   "common": {
     "save": "Salvar",

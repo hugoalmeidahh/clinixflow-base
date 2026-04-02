@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useBookingRequests, useCreateBookingRequest } from "@/hooks/usePatientPortal";
+import { usePortalSettings } from "@/hooks/usePortalSettings";
+import FeatureDisabled from "@/components/portal/FeatureDisabled";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -17,7 +19,11 @@ const statusConfig: Record<string, { label: string; icon: React.ElementType; var
 };
 
 const PatientPortalBooking = () => {
+  const { settings, loading: settingsLoading } = usePortalSettings();
   const { data: requests = [], isLoading } = useBookingRequests();
+
+  if (settingsLoading) return null;
+  if (!settings.allow_request_booking) return <FeatureDisabled />;
   const create = useCreateBookingRequest();
 
   const [date1, setDate1] = useState("");

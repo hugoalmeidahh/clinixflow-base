@@ -144,7 +144,7 @@ const ProfessionalDetail = () => {
       registration_number: isHealthPro ? (form.registration_number || null) : null,
       phone: form.phone || null,
       email: form.email || null,
-    }).eq("id", id);
+    }).eq("id", id).eq("tenant_id", tenantId);
 
     if (error) toast.error(error.message);
     else toast.success("Membro atualizado!");
@@ -153,7 +153,7 @@ const ProfessionalDetail = () => {
 
   const handleLinkToMe = async () => {
     if (!id || !user) return;
-    const { error } = await supabase.from("professionals").update({ user_id: user.id }).eq("id", id);
+    const { error } = await supabase.from("professionals").update({ user_id: user.id }).eq("id", id).eq("tenant_id", tenantId);
     if (error) toast.error(error.message);
     else {
       toast.success("Membro vinculado à sua conta!");
@@ -166,7 +166,7 @@ const ProfessionalDetail = () => {
     const { error } = await supabase.from("professional_specialties").insert({
       professional_id: id,
       specialty_id: selectedSpecId,
-      custom_fee: customFee ? parseFloat(customFee) : null,
+      custom_fee: customFee ? Math.round(parseFloat(customFee) * 100) : null,
     });
     if (error) toast.error(error.message);
     else {
@@ -192,19 +192,32 @@ const ProfessionalDetail = () => {
   const handleSaveAvailability = async () => {
     if (!id) return;
     setAvailSaving(true);
-    await supabase.from("professional_availability").delete().eq("professional_id", id);
-    const toInsert = dayRows
-      .filter(r => r.enabled)
-      .map(r => ({
+
+    const enabledRows = dayRows.filter(r => r.enabled);
+    const disabledRows = dayRows.filter(r => !r.enabled);
+
+    // Upsert enabled rows
+    if (enabledRows.length > 0) {
+      const toUpsert = enabledRows.map(r => ({
+        ...(r.dbId ? { id: r.dbId } : {}),
         professional_id: id,
         day_of_week: r.dayOfWeek,
         start_time: r.startTime,
         end_time: r.endTime,
         appointment_interval_min: 30,
       }));
+      const { error } = await supabase.from("professional_availability").upsert(toUpsert, { onConflict: "id" });
+      if (error) {
+        toast.error(error.message);
+        setAvailSaving(false);
+        return;
+      }
+    }
 
-    if (toInsert.length > 0) {
-      const { error } = await supabase.from("professional_availability").insert(toInsert);
+    // Delete disabled rows that existed in DB
+    const toDelete = disabledRows.filter(r => r.dbId).map(r => r.dbId!);
+    if (toDelete.length > 0) {
+      const { error } = await supabase.from("professional_availability").delete().in("id", toDelete);
       if (error) {
         toast.error(error.message);
         setAvailSaving(false);
@@ -392,7 +405,7 @@ const ProfessionalDetail = () => {
                             <TableCell className="font-medium">{ps.specialties?.name}</TableCell>
                             <TableCell>
                               {(ps.custom_fee ?? ps.specialties?.default_fee)
-                                ? `R$ ${Number(ps.custom_fee ?? ps.specialties?.default_fee).toFixed(2)}`
+                                ? `R$ ${(Number(ps.custom_fee ?? ps.specialties?.default_fee) / 100).toFixed(2)}`
                                 : "—"}
                             </TableCell>
                             <TableCell>

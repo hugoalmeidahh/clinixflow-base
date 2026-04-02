@@ -26,6 +26,8 @@ export default function SignIn() {
         return;
       }
 
+      /*
+      // Todo: Re-enabled by production
       const role =
         data.user?.app_metadata?.role || data.user?.user_metadata?.role;
 
@@ -34,6 +36,7 @@ export default function SignIn() {
         toast.error(t("auth.notAdmin"));
         return;
       }
+      */
 
       navigate("/");
     } catch {

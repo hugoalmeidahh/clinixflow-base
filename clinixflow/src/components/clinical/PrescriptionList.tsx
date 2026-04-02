@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import DOMPurify from "dompurify";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -110,7 +111,7 @@ const PrescriptionList = ({ patientId, professionals }: PrescriptionListProps) =
       <Dialog open={!!viewContent} onOpenChange={() => setViewContent(null)}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader><DialogTitle>Prescrição</DialogTitle></DialogHeader>
-          <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: viewContent || "" }} />
+          <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(viewContent || "") }} />
         </DialogContent>
       </Dialog>
     </div>
